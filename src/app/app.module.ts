@@ -43,6 +43,6 @@ import {SignUpComponent} from './pages/signup/signup.component'; // Necessário 
     provideClientHydration(),
     provideHttpClient(),
   ],
-  bootstrap: [LoginComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
