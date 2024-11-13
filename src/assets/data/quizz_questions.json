@@ -1,0 +1,109 @@
+{
+  "title": "Teste seus conhecimentos sobre a natureza de Manaus!",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Zoológico CIGS: Qual Animal que NÃO faz parte do zoológico CIGS?",
+      "options": [
+        { "id": 1, "name": "Mico-leão-dourado", "alias": "A", "correct": true },
+        { "id": 2, "name": "Onça-pintada", "alias": "B", "correct": false },
+        { "id": 3, "name": "Harpia", "alias": "C", "correct": false },
+        { "id": 4, "name": "Macaco-de-cheiro", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Zoológico CIGS: Qual é o principal objetivo do zoológico CIGS em relação aos animais amazônicos?",
+      "options": [
+        { "id": 1, "name": "Preserva a fauna local", "alias": "A", "correct": true },
+        { "id": 2, "name": "Vigiar os animais", "alias": "B", "correct": false },
+        { "id": 3, "name": "Pesquisa na fauna", "alias": "C", "correct": false },
+        { "id": 4, "name": "Táticas de guerra", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Zoológico CIGS: Além da exposição de animais, que outra atividade o Zoológico CIGS oferece aos visitantes?",
+      "options": [
+        { "id": 1, "name": "Trilhas ecológicas", "alias": "A", "correct": true },
+        { "id": 2, "name": "Montanha-russa", "alias": "B", "correct": false },
+        { "id": 3, "name": "Parque aquático", "alias": "C", "correct": false },
+        { "id": 4, "name": "Treinamento Militar", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Mirante Lúcia Almeida: Quais desses pontos turísticos NÃO é possível de ver do Mirante?",
+      "options": [
+        { "id": 1, "name": "Teatro Amazonas", "alias": "A", "correct": true },
+        { "id": 2, "name": "O Rio Negro", "alias": "B", "correct": false },
+        { "id": 3, "name": "Ponte do Rio Negro", "alias": "C", "correct": false },
+        { "id": 4, "name": "O Encontro das Águas", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Mirante Lúcia Almeida: Qual é o tipo de ambientação que decora o Mirante?",
+      "options": [
+        { "id": 1, "name": "Indígena", "alias": "A", "correct": true },
+        { "id": 2, "name": "Urbana", "alias": "B", "correct": false },
+        { "id": 3, "name": "Europeia", "alias": "C", "correct": false },
+        { "id": 4, "name": "Gótica", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Mirante Lúcia Almeida: Quem foi Lúcia Almeida, que dá nome ao Mirante?",
+      "options": [
+        { "id": 1, "name": "Uma Primeira Dama do Estado", "alias": "A", "correct": true },
+        { "id": 2, "name": "Uma exploradora portuguesa", "alias": "B", "correct": false },
+        { "id": 3, "name": "Uma cientista brasileira", "alias": "C", "correct": false },
+        { "id": 4, "name": "Uma engenheira civil", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Bosque Da Ciência: Qual desses NÃO faz parte das exposições de Animais?",
+      "options": [
+        { "id": 1, "name": "Hotel de Macacos", "alias": "A", "correct": true },
+        { "id": 2, "name": "Condomínio de Abelhas", "alias": "B", "correct": false },
+        { "id": 3, "name": "Viveiro de Jacarés", "alias": "C", "correct": false },
+        { "id": 4, "name": "Ariranhas", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Bosque Da Ciência: Qual instituição é responsável pela administração do Bosque da Ciência?",
+      "options": [
+        { "id": 1, "name": "INPA", "alias": "A", "correct": true },
+        { "id": 2, "name": "CIGS", "alias": "B", "correct": false },
+        { "id": 3, "name": "FGTS", "alias": "C", "correct": false },
+        { "id": 4, "name": "IBAMA", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Bosque Da Ciência: Qual é o objetivo principal do Bosque da Ciência?",
+      "options": [
+        { "id": 1, "name": "Educação ambiental e conservação da biodiversidade", "alias": "A", "correct": true },
+        { "id": 2, "name": "Conservação de patrimônios históricos", "alias": "B", "correct": false },
+        { "id": 3, "name": "Exposição de arte contemporânea", "alias": "C", "correct": false },
+        { "id": 4, "name": "Promoção de eventos esportivos", "alias": "D", "correct": false }
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Parque Ecológico de Lago Janauari: Qual é a planta mais famosa desse Parque?",
+      "options": [
+        { "id": 1, "name": "Vitória-Régia", "alias": "A", "correct": true },
+        { "id": 2, "name": "Acorá", "alias": "B", "correct": false },
+        { "id": 3, "name": "Macrófitas aquáticas", "alias": "C", "correct": false },
+        { "id": 4, "name": "Jacinto-da-água", "alias": "D", "correct": false }
+      ]
+    }
+  ],
+  "results": {
+    "A": "Você acertou a maioria das perguntas! Parabéns, você está bem informado sobre a fauna e a natureza de Manaus.",
+    "B": "Você tem alguns conhecimentos sobre a natureza de Manaus, mas há espaço para aprender mais!"
+  }
+}
