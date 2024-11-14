@@ -15,6 +15,12 @@ interface SignupForm {
 
 @Component({
   selector: 'app-signup',
+  standalone: true,
+  imports: [
+    DefaultLoginLayoutComponent,
+    ReactiveFormsModule,
+    PrimaryInputComponent
+  ],
   providers: [
     LoginService
   ],

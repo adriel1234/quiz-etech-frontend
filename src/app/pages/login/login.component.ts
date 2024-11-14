@@ -13,6 +13,12 @@ interface LoginForm {
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [
+    DefaultLoginLayoutComponent,
+    ReactiveFormsModule,
+    PrimaryInputComponent
+  ],
   providers: [
     LoginService
   ],
