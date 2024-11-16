@@ -1,8 +1,0 @@
-<div class="question-group-create">
-  <h2>Create Question Group</h2>
-  <form [formGroup]="questionGroupForm" (ngSubmit)="onSubmit()">
-    <label for="description">Description</label>
-    <input id="description" formControlName="description" type="text" />
-    <button type="submit" [disabled]="questionGroupForm.invalid">Create</button>
-  </form>
-</div>

@@ -2,9 +2,13 @@ import { Component } from '@angular/core';
 import {QuestionAnswerFormComponent} from '../../components/question-list/question-answer-form/question-answer-form.component';
 import {NavigationExtras, Router, RouterOutlet} from '@angular/router';
 import {NgClass} from '@angular/common';
-import { QuestionGroupListComponent } from '../../components/question-group-list/question-group-list.component';
-import { QuestionGroupCreateComponent } from '../../components/question-group-create/question-group-create.component';
+
+
 import {MatButton} from '@angular/material/button';
+import {GroupQuestionListComponent} from '../../components/question-group-list/group-question-list.component';
+import {
+  QuestionGroupItemComponent
+} from '../../components/question-group-list/question-group-item/question-group-item.component';
 
 interface Menu {
   title: string;
@@ -19,8 +23,8 @@ interface Menu {
     NgClass,
     RouterOutlet,
     QuestionAnswerFormComponent,
-    QuestionGroupListComponent,
-    QuestionGroupCreateComponent,
+    GroupQuestionListComponent,
+    QuestionGroupItemComponent,
     MatButton
   ],
   templateUrl: './user.component.html',
