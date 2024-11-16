@@ -1,6 +1,5 @@
-<div class="group-question-list">
-  <h2>Group Questions</h2>
-  <button mat-raised-button color="primary" (click)="openDialog('add')">Add Group Question</button>
+<div class="container group-question-list">
+  <button mat-raised-button color="primary" (click)="goToPage('question-groups/create')">Adicionar grupo de pergunta</button>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="description">

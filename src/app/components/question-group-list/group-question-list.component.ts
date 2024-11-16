@@ -7,6 +7,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {QuestionGroupItemComponent} from './question-group-item/question-group-item.component';
 import {GroupQuestionService} from './group-question-service';
+import {NavigationExtras, Router} from '@angular/router';
 
 @Component({
   selector: 'app-group-question-list',
@@ -18,6 +19,7 @@ import {GroupQuestionService} from './group-question-service';
 export class GroupQuestionListComponent implements OnInit {
   displayedColumns: string[] = ['description', 'actions'];
   dataSource = new MatTableDataSource<any>();
+  private router:Router = new Router();
 
   constructor(private groupQuestionService: GroupQuestionService, public dialog: MatDialog) {}
 
@@ -63,5 +65,10 @@ export class GroupQuestionListComponent implements OnInit {
     this.groupQuestionService.deleteGroupQuestion(id).subscribe(() => {
       this.loadGroupQuestions();
     });
+  }
+
+  public goToPage(route:string):void{
+    const extras: NavigationExtras = {queryParamsHandling:'merge'};
+    this.router.navigate([route],extras).then();
   }
 }

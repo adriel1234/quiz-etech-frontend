@@ -2,6 +2,14 @@
   <h1>Cadastro de Pergunta</h1>
 
   <form [formGroup]="questionForm" (ngSubmit)="onSubmit()" class="form-container">
+
+    <div class="button-save">
+      <button
+        mat-raised-button
+        [disabled]="questionForm.invalid"
+        matTooltip="Cadastrar Pergunta">Cadastrar pergunta</button>
+    </div>
+
     <!-- Campo de descrição da pergunta -->
     <div class="flex flex-column gap-3 mb-4">
       <mat-form-field style="width: 100%;">
@@ -12,6 +20,9 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+
+
 
     <!-- Opções de respostas -->
     <div formArrayName="options">
@@ -36,7 +47,11 @@
             </mat-error>
           </mat-form-field>
         </div>
+
       </div>
+
     </div>
+
+
   </form>
 </div>

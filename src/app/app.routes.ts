@@ -27,12 +27,12 @@ export const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'question',
+    path: 'question/:action',
     component: QuestionAnswerFormComponent,
     // canActivate: [AuthGuard]
   },
   {
-    path: 'q1',
+    path: 'question',
     component: QuestionListComponent,
     // canActivate: [AuthGuard]
   },
@@ -42,7 +42,7 @@ export const routes: Routes = [
     // canActivate: [AuthGuard]
   },
   {
-    path: 'question-groups/create',
+    path: 'question-groups/:action',
     component: QuestionGroupItemComponent,
     // canActivate: [AuthGuard]
   }

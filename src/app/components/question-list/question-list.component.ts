@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {NavigationExtras, Router} from '@angular/router';
 
 @Component({
   selector: 'app-question-list',
@@ -18,6 +19,7 @@ import {MatInputModule} from '@angular/material/input';
 export class QuestionListComponent implements OnInit {
   displayedColumns: string[] = ['description', 'actions'];
   dataSource = new MatTableDataSource<any>();
+  private router:Router = new Router();
 
   constructor(private questionService: QuestionService, public dialog: MatDialog) {}
 
@@ -63,5 +65,10 @@ export class QuestionListComponent implements OnInit {
     this.questionService.deleteQuestion(id).subscribe(() => {
       this.loadQuestions();
     });
+  }
+
+  public goToPage(route:string):void{
+    const extras: NavigationExtras = {queryParamsHandling:'merge'};
+    this.router.navigate([route],extras).then();
   }
 }

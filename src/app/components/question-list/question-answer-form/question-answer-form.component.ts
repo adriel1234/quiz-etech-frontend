@@ -5,10 +5,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { QuestionService } from '../../../shared/services/question.service';
 import { ToastrService } from 'ngx-toastr';
 import {MatFormFieldModule, MatLabel} from "@angular/material/form-field";
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton, MatButtonModule, MatIconButton} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
-import {MatIcon} from '@angular/material/icon';
+import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -27,6 +29,10 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatIconButton,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    MatTooltip
 
   ],
   templateUrl: './question-answer-form.component.html',

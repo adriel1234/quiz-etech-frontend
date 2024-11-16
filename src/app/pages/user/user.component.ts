@@ -32,9 +32,8 @@ interface Menu {
 })
 export class UserComponent {
   public menuList: Menu[] = [
-    { title: 'Criar grupo', route: '/question-groups/create', isCurrent: false },
-    { title: 'grupos de perguntas', route: '/question-groups', isCurrent: false },
-    { title: 'QUESTÕES', route: '/q1', isCurrent: false },
+    { title: 'GRUPO DE PERGUNTAS', route: '/question-groups', isCurrent: false },
+    { title: 'QUESTÕES', route: '/question', isCurrent: false },
   ];
 
   constructor(private router: Router) {

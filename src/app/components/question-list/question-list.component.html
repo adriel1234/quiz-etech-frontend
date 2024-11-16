@@ -1,5 +1,5 @@
 <div class="container">
-  <button mat-raised-button color="primary" (click)="openDialog('add')">Adicionar Nova Questão</button>
+  <button mat-raised-button color="primary" (click)="goToPage('question/create')">Adicionar Nova Questão</button>
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef> Descrição </th>
