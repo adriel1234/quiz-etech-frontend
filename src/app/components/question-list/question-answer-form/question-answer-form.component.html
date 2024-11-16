@@ -1,0 +1,42 @@
+<div class="flex flex-column gap-1">
+  <h1>Cadastro de Pergunta</h1>
+
+  <form [formGroup]="questionForm" (ngSubmit)="onSubmit()" class="form-container">
+    <!-- Campo de descrição da pergunta -->
+    <div class="flex flex-column gap-3 mb-4">
+      <mat-form-field style="width: 100%;">
+        <mat-label>Descrição da Pergunta</mat-label>
+        <input matInput id="description" formControlName="description" required>
+        <mat-error *ngIf="questionForm.get('description')?.invalid && questionForm.get('description')?.touched">
+          Descrição é obrigatória.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Opções de respostas -->
+    <div formArrayName="options">
+      <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i" class="flex flex-column gap-2 mb-3">
+
+        <!-- Adicionando a alternativa acima do checkbox e campo de descrição -->
+        <div class="alternativa-label">
+          Alternativa {{ getAlternativaLabel(i) }}
+        </div>
+
+        <!-- Layout flex para manter o checkbox e o campo de descrição lado a lado -->
+        <div class="flex gap-2 align-items-center">
+          <!-- Checkbox -->
+          <mat-checkbox formControlName="correct" class="mt-0"></mat-checkbox>
+
+          <!-- Campo de descrição -->
+          <mat-form-field style="width: 100%;">
+            <mat-label>Descrição da Opção {{ i + 1 }}</mat-label>
+            <input matInput formControlName="description" id="option-description-{{ i }}" required>
+            <mat-error *ngIf="option.get('description')?.invalid && option.get('description')?.touched">
+              A descrição da opção é obrigatória.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
