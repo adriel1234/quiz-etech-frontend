@@ -1,12 +1,64 @@
+@use '@angular/material' as mat;
+
 @import 'ngx-toastr/toastr';
+@import 'primeng/resources/primeng.min.css';
+@import 'primeicons/primeicons.css';
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$green-palette,
+    tertiary: mat.$blue-palette,
+  )
+));
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  height: 100%;
+
+  @include mat.all-component-themes($theme);
+  background: linear-gradient(176deg, rgba(15,184,222,1) 0%, rgba(53,179,11,0.6587009803921569) 80%) !important;
 }
 
-html, body {
-    height: 100%;
+html {
+  height: 100%;
 }
+
+table {
+  width: 100%;
+
+  .mat-mdc-header-cell {
+    font-weight: bold !important;
+    background: #026100 !important;
+    color: white !important;
+  }
+}
+
+.menu {
+  background-color: #026100 !important;
+  color: white !important;
+}
+
+.menu-btn:not(:disabled) {
+  color: white  !important;
+}
+
+.menu-btn-active:not(:disabled) {
+  background-color: white  !important;
+  color: #026100 !important;
+}
+
+.btn-default:not(:disabled) {
+  background-color: #026100 !important;
+  color: white  !important;
+}
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field input {
+  width: 100%;  // Para garantir que o input dentro do mat-form-field tenha 100% de largura
+}
+@include mat.core();
+@include mat.color-variants-backwards-compatibility($theme);
