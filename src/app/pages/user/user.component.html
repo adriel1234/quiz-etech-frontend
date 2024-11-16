@@ -1,1 +1,16 @@
-<p>Usuário autenticado</p>
+<div class="flex flex-column w-full h-full">
+  <div class="flex flex-row align-items-center menu pl-6">
+    <h2 class="mr-6">JARAQUIZ</h2>
+    @for (menu of menuList; track menu.route) {
+      <button mat-button (click)="changeMenu(menu)" class="menu-btn uppercase mr-3"
+              [ngClass]="{'menu-btn-active': menu.isCurrent}">
+        {{ menu.title }}
+      </button>
+    }
+  </div>
+  <div class="m-6">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+
