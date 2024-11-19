@@ -1,13 +1,14 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import {MatInput, MatInputModule} from '@angular/material/input';
-import {MatButton, MatButtonModule} from '@angular/material/button';
-import {ActivatedRoute} from '@angular/router';
-import {QuestionService} from '../../../shared/services/question.service';
-import {CommonModule} from '@angular/common';
-import {MatCheckbox} from '@angular/material/checkbox';
+import { Component, OnInit } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { ActivatedRoute } from '@angular/router';
+import { QuestionService } from '../../../shared/services/question.service';
+import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatListOption, MatSelectionList } from '@angular/material/list';
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 
 @Component({
   selector: 'app-question-group-item',
@@ -18,7 +19,13 @@ import {MatCheckbox} from '@angular/material/checkbox';
     FormsModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckbox
+    MatCheckboxModule,
+    MatCardContent,
+    MatCardTitle,
+    MatCardHeader,
+    MatCard,
+    MatSelectionList,
+    MatListOption
   ],
   templateUrl: './question-group-item.component.html',
   styleUrl: './question-group-item.component.scss'
