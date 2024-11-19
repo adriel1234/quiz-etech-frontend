@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatListOption, MatSelectionList } from '@angular/material/list';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 
 @Component({
   selector: 'app-question-group-item',
@@ -25,7 +26,8 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/mat
     MatCardHeader,
     MatCard,
     MatSelectionList,
-    MatListOption
+    MatListOption,
+    FlexLayoutModule
   ],
   templateUrl: './question-group-item.component.html',
   styleUrl: './question-group-item.component.scss'

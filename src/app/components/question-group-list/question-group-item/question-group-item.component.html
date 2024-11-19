@@ -1,9 +1,12 @@
-<div class="form-container">
+<div class="form-container" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
+
   <!-- Campos do Formulário -->
-  <mat-card class="mat-elevation-z4">
+  <mat-card class="mat-elevation-z4" fxFlex="100%" fxLayout="column" style="width: 80%;">
+
     <mat-card-header>
-      <mat-card-title>Cadastro de Grupo de Perguntas</mat-card-title>
+      <mat-card-title class="card-title">Cadastro de Grupo de Perguntas</mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Descrição</mat-label>
@@ -23,8 +26,8 @@
   </mat-card>
 
   <!-- Botões de Ação -->
-  <div class="actions">
-    <button mat-raised-button color="primary" type="submit">Salvar</button>
-    <button mat-stroked-button color="warn" type="button" (click)="close()">Cancelar</button>
+  <div class="actions" fxLayout="row" fxLayoutAlign="end center" fxFlex="100%" [fxLayout.xs]="'column'" [fxLayout.lg]="'row'" [fxLayout.xl]="'row'">
+    <button mat-raised-button color="primary" type="submit" fxFlex="50%">Salvar</button>
+    <button mat-stroked-button color="warn" type="button" (click)="close()" fxFlex="50%">Cancelar</button>
   </div>
 </div>
