@@ -19,41 +19,22 @@ import {NavigationExtras, Router} from '@angular/router';
 export class GroupQuestionListComponent implements OnInit {
   displayedColumns: string[] = ['description', 'actions'];
   dataSource = new MatTableDataSource<any>();
-  private router:Router = new Router();
 
-  constructor(private groupQuestionService: GroupQuestionService, public dialog: MatDialog) {}
+
+  constructor(private groupQuestionService: GroupQuestionService, public dialog: MatDialog,private router: Router) {}
 
   ngOnInit(): void {
     this.loadGroupQuestions();
   }
-
+  cadastroNovo(): void {
+    this.router.navigate(['/question-groups', 'add']);
+  }
   loadGroupQuestions(): void {
     this.groupQuestionService.getGroupQuestions().subscribe((data) => {
       this.dataSource.data = data;
     });
   }
 
-  openDialog(action: string, groupQuestion?: any): void {
-    const dialogRef = this.dialog.open(QuestionGroupItemComponent, {
-      data: { action, groupQuestion },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (action === 'add') {
-          this.addGroupQuestion(result);
-        } else if (action === 'edit') {
-          this.updateGroupQuestion(result);
-        }
-      }
-    });
-  }
-
-  addGroupQuestion(groupQuestion: any): void {
-    this.groupQuestionService.createGroupQuestion(groupQuestion).subscribe(() => {
-      this.loadGroupQuestions();
-    });
-  }
 
   updateGroupQuestion(groupQuestion: any): void {
     this.groupQuestionService.updateGroupQuestion(groupQuestion.id, groupQuestion).subscribe(() => {
@@ -70,5 +51,24 @@ export class GroupQuestionListComponent implements OnInit {
   public goToPage(route:string):void{
     const extras: NavigationExtras = {queryParamsHandling:'merge'};
     this.router.navigate([route],extras).then();
+  }
+  addGroupQuestion(groupQuestion: any): void {
+    this.groupQuestionService.createGroupQuestion(groupQuestion).subscribe(() => {
+      this.loadGroupQuestions();
+    });
+  }
+  openDialog(action: string, groupQuestion?: any): void {
+    const dialogRef = this.dialog.open(QuestionGroupItemComponent, {
+      data: { action, groupQuestion },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (action === 'add') {
+          this.addGroupQuestion(result);
+        } else if (action === 'edit') {
+          this.updateGroupQuestion(result);
+        }
+      }
+    });
   }
 }

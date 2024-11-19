@@ -1,6 +1,5 @@
 <div class="container group-question-list">
-  <button mat-raised-button color="primary" (click)="goToPage('question-groups/create')">Adicionar grupo de pergunta</button>
-
+  <button mat-button (click)="cadastroNovo()">Cadastrar</button>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef>Description</th>

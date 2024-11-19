@@ -1,1 +1,19 @@
-<p>question-group-item works!</p>
+<form #form="ngForm" (ngSubmit)="save()">
+  <mat-form-field>
+    <mat-label>Descrição</mat-label>
+    <input matInput ngModel name="description" [(ngModel)]="groupQuestion.description">
+  </mat-form-field>
+
+  <h2>Selecione as perguntas:</h2>
+  <div *ngFor="let question of questions">
+    <mat-checkbox
+      [(ngModel)]="selectedQuestions[question.id]"
+      [ngModelOptions]="{standalone: true}"
+      (change)="selecionarPergunta(question)">
+      {{ question.description }}
+    </mat-checkbox>
+  </div>
+
+  <button mat-button type="submit">Salvar</button>
+  <button mat-button type="button" (click)="close()">Cancelar</button>
+</form>

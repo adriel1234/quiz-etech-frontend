@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {QuestionGroup} from '../../shared/models/question-group';
 
 @Injectable({
   providedIn: 'root',
@@ -24,5 +25,13 @@ export class GroupQuestionService {
 
   deleteGroupQuestion(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}${id}/`);
+  }
+
+  getQuestionGroups(): Observable<QuestionGroup[]> {
+    return this.http.get<QuestionGroup[]>(this.apiUrl);
+  }
+
+  criarQuestionGroup(questionGroup: QuestionGroup): Observable<any> {
+    return this.http.post(this.apiUrl, questionGroup);
   }
 }
