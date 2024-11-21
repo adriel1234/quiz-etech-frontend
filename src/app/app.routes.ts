@@ -24,26 +24,26 @@ export const routes: Routes = [
   {
     path: 'user',
     component: UserComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'question/:action',
     component: QuestionAnswerFormComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'question',
     component: QuestionListComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'question-groups',
     component: GroupQuestionListComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'question-groups/:action',
     component: QuestionGroupItemComponent,
-    // canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   }
 ];
