@@ -1,5 +1,5 @@
 <div class="flex flex-column w-full h-full">
-  <div class="flex flex-row align-items-center menu pl-6">
+  <div *ngIf="isLoggedIn()" class="flex flex-row align-items-center menu pl-6">
     <h2 class="mr-6">JARAQUIZ</h2>
     @for (menu of menuList; track menu.route) {
       <button mat-button (click)="changeMenu(menu)" class="menu-btn uppercase mr-3"
@@ -7,6 +7,9 @@
         {{ menu.title }}
       </button>
     }
+    <button mat-icon-button (click)="deslogar()">
+      <mat-icon>logout</mat-icon>
+    </button>
   </div>
   <div class="m-6">
     <router-outlet></router-outlet>
