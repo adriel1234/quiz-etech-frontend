@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
+import { Question } from '../models/question.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,24 +24,42 @@ export class QuestionService {
     return headers;
   }
 
-  createQuestion(questionData: any): Observable<any> {
-    const headers = this.getHttpHeaders(); // Obtém os cabeçalhos com o token
-    return this.http.post(this.apiUrl, questionData, { headers });
+  createQuestion(questionData: Question): Observable<Question> {
+    const headers = this.getHttpHeaders();
+    return this.http.post<Question>(this.apiUrl, questionData, { headers }).pipe(
+      catchError((error) => {
+        console.error('Erro ao criar a pergunta:', error);
+        return throwError(() => new Error('Falha ao criar a pergunta.'));
+      })
+    );
   }
 
-  getQuestions(): Observable<any[]> {
-    const headers = this.getHttpHeaders(); // Adiciona o token nos cabeçalhos
-    return this.http.get<any[]>(this.apiUrl, { headers });
+  getQuestions(): Observable<Question[]> {
+    const headers = this.getHttpHeaders();
+    return this.http.get<Question[]>(this.apiUrl, { headers }).pipe(
+      catchError((error) => {
+        console.error('Erro ao buscar perguntas:', error);
+        return throwError(() => new Error('Falha ao buscar perguntas.'));
+      })
+    );
   }
 
-  updateQuestion(id: number, question: any): Observable<any> {
-    const headers = this.getHttpHeaders(); // Adiciona o token nos cabeçalhos
-    return this.http.put(`${this.apiUrl}${id}/`, question, { headers });
+  updateQuestion(id: number, question: Question): Observable<Question> {
+    const headers = this.getHttpHeaders();
+    return this.http.put<Question>(`${this.apiUrl}${id}/`, question, { headers }).pipe(
+      catchError((error) => {
+        console.error('Erro ao atualizar a pergunta:', error);
+        return throwError(() => new Error('Falha ao atualizar a pergunta.'));
+      })
+    );
   }
-  deleteQuestion(id: number): Observable<any> {
-    const headers = this.getHttpHeaders(); // Adiciona o token nos cabeçalhos
-    return this.http.delete(`${this.apiUrl}${id}/`, { headers });
+  deleteQuestion(id: number): Observable<void> {
+    const headers = this.getHttpHeaders();
+    return this.http.delete<void>(`${this.apiUrl}${id}/`, { headers }).pipe(
+      catchError((error) => {
+        console.error('Erro ao excluir a pergunta:', error);
+        return throwError(() => new Error('Falha ao excluir a pergunta.'));
+      })
+    );
   }
-
-
 }
