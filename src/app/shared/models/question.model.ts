@@ -1,9 +1,16 @@
-export interface Option {
-  description: string;
-  correct: boolean;
-}
+// export interface Option {
+//   description: string;
+//   correct: boolean;
+// }
+//
+// export interface Question {
+//   description: string;
+//   options: Option[];
+// }
 
-export interface Question {
+
+import { ModelBase } from './model-base';
+
+export interface Question extends ModelBase {
   description: string;
-  options: Option[];
 }
