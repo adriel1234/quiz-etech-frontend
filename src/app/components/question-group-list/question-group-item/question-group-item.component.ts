@@ -12,7 +12,7 @@ import {FlexLayoutModule} from '@ngbracket/ngx-layout';
 import {GroupQuestionService} from '../group-question-service';
 import { Validators, FormGroup, NonNullableFormBuilder, UntypedFormArray, FormsModule } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { QuestionGroup } from '../../../shared/models/question-group'; 
+import { QuestionGroup } from '../../../shared/models/question-group.model';
 
 @Component({
   selector: 'app-question-group-item',
@@ -36,22 +36,19 @@ import { QuestionGroup } from '../../../shared/models/question-group';
   templateUrl: './question-group-item.component.html',
   styleUrl: './question-group-item.component.scss'
 })
-
-
 export class QuestionGroupItemComponent implements OnInit {
   form!: FormGroup;
   action: string = '';
-  groupQuestion: any = { description: '', questions: [] };
+  groupQuestion: QuestionGroup = {} as QuestionGroup;
   questions: any[] = [];
   selectedQuestions: { [key: number]: boolean } = {};
 
   constructor(
-    private formBuilder: NonNullableFormBuilder,  // Corrigido: NonNullableFormBuilder
+    private formBuilder: NonNullableFormBuilder,
     private route: ActivatedRoute,
     private questionService: QuestionService,
     private groupQuestionService: GroupQuestionService,
     private snackBar: MatSnackBar
-    
   ) {}
 
   ngOnInit(): void {
@@ -60,116 +57,79 @@ export class QuestionGroupItemComponent implements OnInit {
       if (this.action === 'edit') {
         const groupId = params['id'];
         this.groupQuestionService.getGroupQuestion(groupId).subscribe((group: QuestionGroup) => {
+          console.log('Grupo de perguntas carregado para edição:', group);
           this.groupQuestion = group;
-          console.log('Grupo de perguntas carregado: ', this.groupQuestion); // Verifique se as perguntas estão aqui
           this.initForm();  // Inicializa o formulário com as perguntas carregadas
         });
       } else {
         this.initForm();  // Para a criação, começa com um formulário vazio
       }
     });
-  
-    // Carregar a lista de perguntas
-    this.questionService.getQuestions().subscribe(questions => {
-      this.questions = questions;
-      console.log('Perguntas carregadas: ', this.questions);
-  
-      // Inicializa o estado de seleção
-      this.questions.forEach(question => {
-        this.selectedQuestions[question.id] = false; // Marcar como não selecionada inicialmente
-      });
-    });
   }
-
   // Inicializa o formulário
   initForm() {
-    // Cria o formulário com descrição e as perguntas selecionadas
     this.form = this.formBuilder.group({
-      description: [this.groupQuestion.description, [Validators.required, Validators.maxLength(255)]],
+      description: [this.groupQuestion.description || '', [Validators.required, Validators.maxLength(255)]],
       questions: this.formBuilder.array(this.retrieveSelectedQuestions()) // Ajuste aqui
     });
   }
-  
+
   // Recupera as perguntas selecionadas para incluir no FormArray
   private retrieveSelectedQuestions(): any[] {
     const selectedQuestionsIds: any[] = [];
-    
     this.questions.forEach(question => {
       if (this.selectedQuestions[question.id]) {
-        selectedQuestionsIds.push(question.id);  // Adiciona apenas o ID
+        selectedQuestionsIds.push(question.id);  // Apenas IDs
       }
     });
-    
-    return selectedQuestionsIds;  // Retorna apenas os IDs
-  }
-  // Recupera as perguntas do grupo
-  private retrieveQuestions(questions: any[] = []): FormGroup[] {
-    const questionsFormArray: FormGroup[] = [];
-    if (questions.length > 0) {
-      questions.forEach(question => {
-        questionsFormArray.push(this.createQuestion(question));
-      });
-    } else {
-      // Adicione perguntas vazias ou com valores padrão (se necessário)
-      questionsFormArray.push(this.createQuestion({ id: null, description: '', selected: false }));
-    }
-    return questionsFormArray;
+    return selectedQuestionsIds;  // Retorna apenas os IDs selecionados
   }
 
-  // Cria um grupo de pergunta no formulário
-  private createQuestion(question: any = { id: '', description: '', selected: false }) {
-    return this.formBuilder.group({
-      id: [question.id],
-      description: [question.description, [Validators.required, Validators.maxLength(255)]],
-      selected: [question.selected]
-    });
-  }
-
-  // Obtém o FormArray de perguntas
-  getQuestionsFormArray() {
-    return (<UntypedFormArray>this.form.get('questions')).controls;
-  }
-
-  // Adiciona uma nova pergunta
-  addNewQuestion() {
-    const questions = this.form.get('questions') as UntypedFormArray;
-    questions.push(this.createQuestion());
-  }
-
-  // Remove uma pergunta do formulário
-  removeQuestion(index: number) {
-    const questions = this.form.get('questions') as UntypedFormArray;
-    questions.removeAt(index);
-  }
-
-  // Método de submissão
-  save() {
-    console.log('Formulário:', this.form.value);  // Verifique o conteúdo do formulário
+  // Método que prepara e envia os dados para o backend
+save() {
+  // Garantir que a descrição não esteja vazia
+  const description = this.form.get('description')?.value.trim();
   
-    if (this.form.valid) {
-      if (this.action === 'edit') {
-        this.groupQuestionService.updateGroupQuestion(this.groupQuestion.id, this.form.value).subscribe(
-          response => this.onSuccess(),
-          error => this.onError()
-        );
-      } else {
-        this.groupQuestionService.createGroupQuestion(this.form.value).subscribe(
-          response => this.onSuccess(),
-          error => this.onError()
-        );
-      }
-    } else {
-      this.snackBar.open('Por favor, preencha todos os campos obrigatórios!', '', { duration: 5000 });
-    }
+  // Se a descrição estiver vazia, mostrar um alerta e impedir o envio
+  if (!description) {
+    this.snackBar.open('Descrição é obrigatória', '', { duration: 5000 });
+    return;
   }
 
-  // Caso de sucesso
+  // Garantir que o id esteja definido corretamente (null se for um novo grupo)
+  const id = this.groupQuestion.id || null;  // Se não houver id, considera null para criação
+
+  // Recupera as perguntas selecionadas
+  const selectedQuestions = this.questions.filter((question) => this.selectedQuestions[question.id]);
+
+  const requestData: QuestionGroup = {
+    id: id,  // Se estiver criando, id será null, caso contrário, usa o id existente
+    description: description,  // Usar o valor do formulário
+    questionsGroupQuestion: selectedQuestions,  // Passar as perguntas selecionadas
+    createdAt: this.groupQuestion.createdAt || new Date(),  // Usar data de criação, ou nova data
+    modifiedAt: new Date(),  // Definir a data de modificação como agora
+  };
+
+  console.log('Request Data:', requestData);  // Verifique os dados antes de enviar
+
+  // Enviar os dados para o backend
+  if (this.action === 'edit') {
+    this.groupQuestionService.updateGroupQuestion(this.groupQuestion.id, requestData).subscribe(
+      response => this.onSuccess(),
+      error => this.onError(error)
+    );
+  } else {
+    this.groupQuestionService.createGroupQuestion(requestData).subscribe(
+      response => this.onSuccess(),
+      error => this.onError(error)
+    );
+  }
+}
   private onSuccess() {
     this.snackBar.open('Grupo de perguntas salvo com sucesso!', '', { duration: 5000 });
   }
 
-  // Caso de erro
-  private onError() {
+  private onError(error: any) {
     this.snackBar.open('Erro ao salvar o grupo de perguntas.', '', { duration: 5000 });
   }
 
