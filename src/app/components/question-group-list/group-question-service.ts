@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
 import {QuestionGroup} from '../../shared/models/question-group';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +11,7 @@ export class GroupQuestionService {
   private apiUrl = 'http://localhost:8000/api/question-group/';
 
 
-  constructor(private http: HttpClient) {
-  }
-
+  constructor(private http: HttpClient, private router: Router) {}
   // Função para obter o token de autenticação
   private getAuthToken(): string | null {
     return sessionStorage.getItem('auth-token');  // Recupera o token armazenado no sessionStorage
@@ -30,6 +29,13 @@ export class GroupQuestionService {
   getGroupQuestions(): Observable<QuestionGroup[]> {
     const headers = this.getHttpHeaders();
     return this.http.get<QuestionGroup[]>(this.apiUrl, {headers}).pipe(
+      catchError(this.handleError)
+    );
+    
+  }
+  getGroupQuestion(id: number): Observable<QuestionGroup> {
+    const headers = this.getHttpHeaders();
+    return this.http.get<QuestionGroup>(`${this.apiUrl}${id}/`, { headers }).pipe(
       catchError(this.handleError)
     );
   }
@@ -57,6 +63,8 @@ export class GroupQuestionService {
   private handleError(error: any) {
     if (error.status === 401) {
       console.error('Unauthorized access - redirecting to login');
+      // Exemplo de redirecionamento para a página de login
+      this.router.navigate(['/login']);
     } else if (error.status === 500) {
       console.error('Server error occurred');
     }

@@ -17,7 +17,7 @@
       <h2>Selecione as Perguntas:</h2>
       <div class="questions-list">
         <mat-selection-list>
-          <mat-list-option *ngFor="let question of questions" [(selected)]="selectedQuestions[question.id]" (selectionChange)="selecionarPergunta(question)">
+          <mat-list-option *ngFor="let question of questions" [(selected)]="selectedQuestions[question.id]">
             {{ question.description }}
           </mat-list-option>
         </mat-selection-list>
@@ -27,7 +27,7 @@
 
   <!-- Botões de Ação -->
   <div class="actions" fxLayout="row" fxLayoutAlign="end center" fxFlex="100%" [fxLayout.xs]="'column'" [fxLayout.lg]="'row'" [fxLayout.xl]="'row'">
-    <button mat-raised-button color="primary" type="submit" fxFlex="50%">Salvar</button>
+    <button mat-raised-button color="primary" type="button" fxFlex="50%" (click)="save()">Salvar</button>
     <button mat-stroked-button color="warn" type="button" (click)="close()" fxFlex="50%">Cancelar</button>
   </div>
 </div>
