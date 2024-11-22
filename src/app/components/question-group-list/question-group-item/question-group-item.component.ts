@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatListOption, MatSelectionList } from '@angular/material/list';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 import {FlexLayoutModule} from '@ngbracket/ngx-layout';
+import {GroupQuestionService} from '../group-question-service';
 
 @Component({
   selector: 'app-question-group-item',
@@ -38,7 +39,12 @@ export class QuestionGroupItemComponent implements OnInit{
   questions: any[] = [];
   selectedQuestions: { [id: number]: boolean } = {};
 
-  constructor(private route: ActivatedRoute, private questionService: QuestionService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private questionService: QuestionService,
+    private groupQuestionService: GroupQuestionService  // Injete o serviço aqui
+  ) {}
+
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -48,6 +54,7 @@ export class QuestionGroupItemComponent implements OnInit{
       }
     });
 
+    // Carregar a lista de perguntas
     this.questionService.getQuestions().subscribe(questions => {
       this.questions = questions;
     });
@@ -61,8 +68,33 @@ export class QuestionGroupItemComponent implements OnInit{
     }
   }
 
+  // Método para salvar o grupo de perguntas no banco
   save(): void {
-    console.log(this.groupQuestion);
+    if (this.action === 'edit') {
+      // Se for edição, atualize o grupo de perguntas
+      this.groupQuestionService.updateGroupQuestion(this.groupQuestion.id, this.groupQuestion)
+        .subscribe(
+          response => {
+            console.log('Grupo de perguntas atualizado', response);
+            // Você pode redirecionar ou mostrar uma mensagem de sucesso
+          },
+          error => {
+            console.error('Erro ao atualizar o grupo de perguntas', error);
+          }
+        );
+    } else {
+      // Se for criar um novo grupo de perguntas
+      this.groupQuestionService.createGroupQuestion(this.groupQuestion)
+        .subscribe(
+          response => {
+            console.log('Grupo de perguntas criado', response);
+            // Você pode redirecionar ou mostrar uma mensagem de sucesso
+          },
+          error => {
+            console.error('Erro ao criar o grupo de perguntas', error);
+          }
+        );
+    }
   }
 
   close(): void {

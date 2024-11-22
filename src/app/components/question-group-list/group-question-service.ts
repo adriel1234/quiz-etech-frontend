@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, Observable, throwError} from 'rxjs';
 import {QuestionGroup} from '../../shared/models/question-group';
 
 @Injectable({
@@ -9,29 +9,57 @@ import {QuestionGroup} from '../../shared/models/question-group';
 export class GroupQuestionService {
   private apiUrl = 'http://localhost:8000/api/question-group/';
 
-  constructor(private http: HttpClient) {}
 
-  getGroupQuestions(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  constructor(private http: HttpClient) {
   }
 
-  createGroupQuestion(groupQuestion: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, groupQuestion);
+  // Função para obter o token de autenticação
+  private getAuthToken(): string | null {
+    return sessionStorage.getItem('auth-token');  // Recupera o token armazenado no sessionStorage
   }
 
-  updateGroupQuestion(id: number, groupQuestion: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}${id}/`, groupQuestion);
+  private getHttpHeaders(): HttpHeaders {
+    const token = this.getAuthToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);  // Adiciona o token no cabeçalho
+    }
+    return headers;
   }
 
-  deleteGroupQuestion(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}${id}/`);
+  getGroupQuestions(): Observable<QuestionGroup[]> {
+    const headers = this.getHttpHeaders();
+    return this.http.get<QuestionGroup[]>(this.apiUrl, {headers}).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  getQuestionGroups(): Observable<QuestionGroup[]> {
-    return this.http.get<QuestionGroup[]>(this.apiUrl);
+  createGroupQuestion(groupQuestion: QuestionGroup): Observable<QuestionGroup> {
+    const headers = this.getHttpHeaders();
+    return this.http.post<QuestionGroup>(this.apiUrl, groupQuestion, {headers}).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  criarQuestionGroup(questionGroup: QuestionGroup): Observable<any> {
-    return this.http.post(this.apiUrl, questionGroup);
+  updateGroupQuestion(id: number, groupQuestion: QuestionGroup): Observable<QuestionGroup> {
+    const headers = this.getHttpHeaders();
+    return this.http.put<QuestionGroup>(`${this.apiUrl}${id}/`, groupQuestion, {headers}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteGroupQuestion(id: number): Observable<void> {
+    const headers = this.getHttpHeaders();
+    return this.http.delete<void>(`${this.apiUrl}${id}/`, {headers}).pipe(
+      catchError(this.handleError)
+    );
+  }
+  private handleError(error: any) {
+    if (error.status === 401) {
+      console.error('Unauthorized access - redirecting to login');
+    } else if (error.status === 500) {
+      console.error('Server error occurred');
+    }
+    return throwError('An error occurred. Please try again later.');
   }
 }
