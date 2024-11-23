@@ -8,9 +8,15 @@
 //   options: Option[];
 // }
 
+//
+// import { ModelBase } from './model-base';
+//
+// export interface Question extends ModelBase {
+//   description: string;
+// }
 
-import { ModelBase } from './model-base';
 
-export interface Question extends ModelBase {
+export interface Question {
+  id: number;
   description: string;
 }

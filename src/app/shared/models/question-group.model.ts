@@ -1,7 +1,5 @@
-import { ModelBase } from './model-base';
-import { Question } from './question.model';
-
-export interface QuestionGroup extends ModelBase {
-  description: string;
-  questionsGroupQuestion: Question[];
+export class QuestionGroup {
+  id?: number;
+  description?: string;
+  questions_group_question?: number[];  // Um array de IDs
 }

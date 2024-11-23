@@ -1,4 +1,4 @@
-export interface QuestionGroup {
-  id: number;
-  description: string;
-}
+// export interface QuestionGroup {
+//   id: number;
+//   description: string;
+// }

@@ -1,33 +1,37 @@
-<div class="form-container" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
+<div class="flex flex-column gap-1">
+  <h1>Cadastro de Grupo de Perguntas</h1>
 
-  <!-- Campos do Formulário -->
-  <mat-card class="mat-elevation-z4" fxFlex="100%" fxLayout="column" style="width: 80%;">
-
-    <mat-card-header>
-      <mat-card-title class="card-title">Cadastro de Grupo de Perguntas</mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <mat-form-field appearance="outline" class="full-width">
+  <form [formGroup]="formGroup">
+    <div class="flex flex-column gap-3 mb-4">
+      <!-- Campo de Descrição -->
+      <mat-form-field>
         <mat-label>Descrição</mat-label>
-        <input matInput ngModel name="description" [(ngModel)]="groupQuestion.description" placeholder="Insira a descrição do grupo">
+        <input matInput type="text" formControlName="description" autoFocus required>
+        <!-- Verificação de erro -->
+        <mat-error *ngIf="formGroup.get('description')?.hasError('required')">
+          Campo obrigatório
+        </mat-error>
       </mat-form-field>
 
-      <!-- Lista de Perguntas -->
-      <h2>Selecione as Perguntas:</h2>
-      <div class="questions-list">
-        <mat-selection-list>
-          <mat-list-option *ngFor="let question of questions" [(selected)]="selectedQuestions[question.id]">
+      <!-- Campo de Perguntas -->
+      <mat-form-field>
+        <mat-label>Perguntas</mat-label>
+        <!-- Usando mat-select para seleção de perguntas -->
+        <mat-select formControlName="questions_group_question" multiple>
+          <mat-option *ngFor="let question of questions" [value]="question.id">
             {{ question.description }}
-          </mat-list-option>
-        </mat-selection-list>
-      </div>
-    </mat-card-content>
-  </mat-card>
+          </mat-option>
+        </mat-select>
+        <!-- Verificação de erro -->
+        <mat-error *ngIf="formGroup.get('questions_group_question')?.hasError('required')">
+          Seleção de perguntas obrigatória
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <!-- Botões de Ação -->
-  <div class="actions" fxLayout="row" fxLayoutAlign="end center" fxFlex="100%" [fxLayout.xs]="'column'" [fxLayout.lg]="'row'" [fxLayout.xl]="'row'">
-    <button mat-raised-button color="primary" type="button" fxFlex="50%" (click)="save()">Salvar</button>
-    <button mat-stroked-button color="warn" type="button" (click)="close()" fxFlex="50%">Cancelar</button>
-  </div>
+    <!-- Botão de Envio -->
+    <button mat-flat-button class="btn-default" id="save" type="submit" (click)="saveOrUpdate()" [disabled]="!formGroup.valid">
+      Salvar Grupo
+    </button>
+  </form>
 </div>

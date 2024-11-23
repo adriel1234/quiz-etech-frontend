@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
-import {QuestionGroup} from '../../shared/models/question-group';
+
 import { Router } from '@angular/router';
+import {QuestionGroup} from '../../shared/models/question-group.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class GroupQuestionService {
     return this.http.get<QuestionGroup[]>(this.apiUrl, {headers}).pipe(
       catchError(this.handleError)
     );
-    
+
   }
   getGroupQuestion(id: number): Observable<QuestionGroup> {
     const headers = this.getHttpHeaders();
@@ -42,8 +43,31 @@ export class GroupQuestionService {
 
   createGroupQuestion(groupQuestion: QuestionGroup): Observable<QuestionGroup> {
     const headers = this.getHttpHeaders();
-    return this.http.post<QuestionGroup>(this.apiUrl, groupQuestion, {headers}).pipe(
-      catchError(this.handleError)
+
+    // Log para verificar os dados que estão sendo enviados
+    console.log('Dados enviados para criação do grupo de questões:', groupQuestion);
+
+    return this.http.post<QuestionGroup>(this.apiUrl, groupQuestion, { headers }).pipe(
+      catchError((error) => {
+        // Se a resposta for 400, mostre o erro completo
+        if (error.status === 400) {
+          console.error('Erro 400 (Bad Request) - Detalhes:', error.error);
+          if (error.error) {
+            console.log('Resposta do erro:', error.error);
+            alert(`Erro: ${JSON.stringify(error.error)}`);  // Exibe o erro detalhado na interface
+          } else {
+            alert('Erro 400: Dados enviados não são válidos');
+          }
+        }
+
+        // Se a resposta for outro erro, exibe uma mensagem genérica
+        if (error.status !== 400) {
+          console.error('Erro desconhecido:', error);
+          alert('Erro desconhecido. Por favor, tente novamente mais tarde.');
+        }
+
+        return throwError(error);  // Passa o erro para o fluxo
+      })
     );
   }
 
