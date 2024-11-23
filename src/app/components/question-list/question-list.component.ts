@@ -8,64 +8,63 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {NavigationExtras, Router} from '@angular/router';
+import {QuestionGroup} from '../../shared/models/question-group.model';
+import {BaseService} from '../../shared/services/base.service';
+import {HttpClient} from '@angular/common/http';
+import {URLS} from '../../shared/urls';
+import {Question} from '../../shared/models/question.model';
+import {FormsModule} from '@angular/forms';
+import {MatCard} from '@angular/material/card';
 
 @Component({
   selector: 'app-question-list',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTableModule, MatButtonModule, MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule, MatCard],
   templateUrl: './question-list.component.html',
   styleUrls: ['./question-list.component.scss'],
 })
 export class QuestionListComponent implements OnInit {
-  displayedColumns: string[] = ['description', 'actions'];
-  dataSource = new MatTableDataSource<any>();
-  private router:Router = new Router();
+  displayedColumns: string[] = ['id','description', 'actions'];
+  public dataSource: Question[] = [];
+  public searchDescription: string = '';
 
-  constructor(private questionService: QuestionService, public dialog: MatDialog) {}
+  private router: Router = new Router();
 
-  ngOnInit(): void {
-    this.loadQuestions();
+  private service: BaseService<Question>;
+
+
+  constructor(private http: HttpClient) {
+    this.service = new BaseService<Question>(http, URLS.QUESTION);
   }
 
-  loadQuestions(): void {
-    this.questionService.getQuestions().subscribe((data) => {
-      this.dataSource.data = data;
-    });
+  public ngOnInit(): void {
+    this.search();
   }
 
-  openDialog(action: string, question?: any): void {
-    const dialogRef = this.dialog.open(QuestionAnswerFormComponent, {
-      data: { action, question },
-    });
+  public search(resetIndex: boolean = false): void {
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (action === 'add') {
-          this.addQuestion(result);
-        } else if (action === 'edit') {
-          this.updateQuestion(result);
-        }
+    this.service.addParameter('description', this.searchDescription);
+    this.service.getAll().subscribe({
+      next: (data: Question[]) => {
+        this.dataSource = data;
+      },
+      error: (_) => {
+        console.error('Error loading QuestionGroup');
       }
     });
   }
 
-  addQuestion(question: any): void {
-    this.questionService.createQuestion(question).subscribe(() => {
-      this.loadQuestions();
+  public deleteObject(id: number): void {
+    this.service.delete(id).subscribe({
+      next: (_) => {
+        this.search();
+      },
+      error: (_) => {
+        console.error('Error deleting Question');
+      }
     });
   }
 
-  updateQuestion(question: any): void {
-    this.questionService.updateQuestion(question.id, question).subscribe(() => {
-      this.loadQuestions();
-    });
-  }
-
-  deleteQuestion(id: number): void {
-    this.questionService.deleteQuestion(id).subscribe(() => {
-      this.loadQuestions();
-    });
-  }
 
   public goToPage(route:string):void{
     const extras: NavigationExtras = {queryParamsHandling:'merge'};

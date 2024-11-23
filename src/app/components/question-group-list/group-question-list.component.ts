@@ -59,7 +59,7 @@ export class GroupQuestionListComponent implements OnInit {
         this.search();
       },
       error: (_) => {
-        console.error('Error deleting Music');
+        console.error('Error deleting Grupo');
       }
     });
   }
