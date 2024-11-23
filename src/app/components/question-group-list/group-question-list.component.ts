@@ -8,67 +8,65 @@ import {MatInputModule} from '@angular/material/input';
 import {QuestionGroupItemComponent} from './question-group-item/question-group-item.component';
 import {GroupQuestionService} from './group-question-service';
 import {NavigationExtras, Router} from '@angular/router';
+import {BaseService} from '../../shared/services/base.service';
+import {QuestionGroup} from '../../shared/models/question-group.model';
+import {HttpClient} from '@angular/common/http';
+import {URLS} from '../../shared/urls';
+import {MatCard} from '@angular/material/card';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-group-question-list',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule, MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTableModule, MatButtonModule, MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule, MatCard, FormsModule],
   templateUrl: './group-question-list.component.html',
   styleUrls: ['./group-question-list.component.scss'],
 })
 export class GroupQuestionListComponent implements OnInit {
-  displayedColumns: string[] = ['description', 'actions'];
-  dataSource = new MatTableDataSource<any>();
+  displayedColumns: string[] = ['id','description', 'actions'];
+  public dataSource: QuestionGroup[] = [];
+  public searchDescription: string = '';
+
+  private router: Router = new Router();
+
+  private service: BaseService<QuestionGroup>;
 
 
-  constructor(private groupQuestionService: GroupQuestionService, public dialog: MatDialog,private router: Router) {}
-
-  ngOnInit(): void {
-    this.loadGroupQuestions();
+  constructor(private http: HttpClient) {
+    this.service = new BaseService<QuestionGroup>(http, URLS.GROUP);
   }
-  cadastroNovo(): void {
-    this.router.navigate(['/question-groups', 'add']);
+
+  public ngOnInit(): void {
+    this.search();
   }
-  loadGroupQuestions(): void {
-    this.groupQuestionService.getGroupQuestions().subscribe((data) => {
-      this.dataSource.data = data;
+
+  public search(resetIndex: boolean = false): void {
+
+    this.service.addParameter('description', this.searchDescription);
+    this.service.getAll().subscribe({
+      next: (data: QuestionGroup[]) => {
+        this.dataSource = data;
+      },
+      error: (_) => {
+        console.error('Error loading QuestionGroup');
+      }
     });
   }
 
-
-  updateGroupQuestion(groupQuestion: any): void {
-    this.groupQuestionService.updateGroupQuestion(groupQuestion.id, groupQuestion).subscribe(() => {
-      this.loadGroupQuestions();
+  public deleteObject(id: number): void {
+    this.service.delete(id).subscribe({
+      next: (_) => {
+        this.search();
+      },
+      error: (_) => {
+        console.error('Error deleting Music');
+      }
     });
   }
 
-  deleteGroupQuestion(id: number): void {
-    this.groupQuestionService.deleteGroupQuestion(id).subscribe(() => {
-      this.loadGroupQuestions();
-    });
-  }
 
   public goToPage(route:string):void{
     const extras: NavigationExtras = {queryParamsHandling:'merge'};
     this.router.navigate([route],extras).then();
-  }
-  addGroupQuestion(groupQuestion: any): void {
-    this.groupQuestionService.createGroupQuestion(groupQuestion).subscribe(() => {
-      this.loadGroupQuestions();
-    });
-  }
-  openDialog(action: string, groupQuestion?: any): void {
-    const dialogRef = this.dialog.open(QuestionGroupItemComponent, {
-      data: { action, groupQuestion },
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        if (action === 'add') {
-          this.addGroupQuestion(result);
-        } else if (action === 'edit') {
-          this.updateGroupQuestion(result);
-        }
-      }
-    });
   }
 }
