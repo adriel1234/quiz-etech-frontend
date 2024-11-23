@@ -109,11 +109,11 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
       this.validateForm();
       if (this.object.id) {
         this.service.update(this.object.id!, this.object).subscribe((response) => {
-          this.goToPage('question-group');
+          this.goToPage('question-groups');
         });
       } else {
         this.service.save(this.object).subscribe((response) => {
-          this.goToPage('question-group');
+          this.goToPage('question-groups');
         });
       }
     }
