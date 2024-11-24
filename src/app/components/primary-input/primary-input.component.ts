@@ -5,6 +5,10 @@ type InputTypes = "text" | "email" | "password"
 
 @Component({
   selector: 'app-primary-input',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule
+  ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

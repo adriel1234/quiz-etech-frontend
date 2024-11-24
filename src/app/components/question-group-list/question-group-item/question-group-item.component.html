@@ -1,0 +1,35 @@
+<div class="flex flex-column gap-1">
+  <h1>Cadastro de Grupo de Perguntas</h1>
+
+  <form [formGroup]="formGroup">
+    <div class="flex flex-column gap-3 mb-4">
+      <!-- Campo de Descrição -->
+      <mat-form-field>
+        <mat-label>Descrição</mat-label>
+        <input matInput type="text" formControlName="description" autoFocus required>
+        <!-- Verificação de erro -->
+        <mat-error *ngIf="formGroup.get('description')?.hasError('required')">
+          Campo obrigatório
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo de Perguntas -->
+      <mat-form-field appearance="fill">
+        <mat-label>Questões</mat-label>
+        <mat-select formControlName="questions_group_question" multiple>
+          <mat-option *ngFor="let question of questions" [value]="question.id">
+            {{ question.description }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.get('questions_group_question')">
+          Selecione ao menos uma questão.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Botão de Envio -->
+    <button mat-flat-button class="btn-default" id="save" type="submit" (click)="saveOrUpdate()" [disabled]="!formGroup.valid">
+      Salvar Grupo
+    </button>
+  </form>
+</div>

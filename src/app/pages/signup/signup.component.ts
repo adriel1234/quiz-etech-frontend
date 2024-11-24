@@ -3,7 +3,7 @@ import { DefaultLoginLayoutComponent } from '../../components/default-login-layo
 import { FormControl, FormGroup, FormRecord, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimaryInputComponent } from '../../components/primary-input/primary-input.component';
 import { Router } from '@angular/router';
-import { LoginService } from '../../services/login.service';
+import { LoginService } from '../../shared/services/login.service';
 import { ToastrService } from 'ngx-toastr';
 
 interface SignupForm {
@@ -15,6 +15,12 @@ interface SignupForm {
 
 @Component({
   selector: 'app-signup',
+  standalone: true,
+  imports: [
+    DefaultLoginLayoutComponent,
+    ReactiveFormsModule,
+    PrimaryInputComponent
+  ],
   providers: [
     LoginService
   ],
@@ -37,11 +43,20 @@ export class SignUpComponent {
     })
   }
 
-  submit(){
-    this.loginService.login(this.signupForm.value.email, this.signupForm.value.password).subscribe({
-      next: () => this.toastService.success("Login feito com sucesso!"),
-      error: () => this.toastService.error("Erro inesperado! Tente novamente mais tarde")
-    })
+  submit() {
+    if (this.signupForm.value.password !== this.signupForm.value.passwordConfirm) {
+      this.toastService.error("Passwords do not match!");
+      return;
+    }
+
+    this.loginService.signup(
+      this.signupForm.value.name,
+      this.signupForm.value.email,
+      this.signupForm.value.password
+    ).subscribe({
+      next: () => this.toastService.success("Registration successful!"),
+      error: () => this.toastService.error("Unexpected error! Please try again later.")
+    });
   }
 
   navigate(){
