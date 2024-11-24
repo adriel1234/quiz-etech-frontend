@@ -13,6 +13,9 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTooltip} from '@angular/material/tooltip';
 import { Question } from '../../../shared/models/question.model';
 import {Option} from '../../../shared/models/option.model';
+import {BaseComponent} from '../../base.component';
+import {HttpClient} from '@angular/common/http';
+import {URLS} from '../../../shared/urls';
 
 
 @Component({
@@ -40,15 +43,16 @@ import {Option} from '../../../shared/models/option.model';
   templateUrl: './question-answer-form.component.html',
   styleUrls: ['./question-answer-form.component.scss'],
 })
-export class QuestionAnswerFormComponent implements OnInit {
-  questionForm: FormGroup;
+export class QuestionAnswerFormComponent extends BaseComponent<Question> implements OnInit {
+  public questionForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    http: HttpClient,
     private questionService: QuestionService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private fb: FormBuilder // Injeção do FormBuilder
   ) {
-    // Inicializa o formulário com validações necessárias
+    super(http, URLS.QUESTION); // Passando a URL correta do serviço
     this.questionForm = this.fb.group({
       description: ['', [Validators.required]],
       options: this.fb.array([]),
@@ -56,7 +60,7 @@ export class QuestionAnswerFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.addInitialOptions(); // Adiciona 4 opções iniciais
+    this.addInitialOptions();  // Adiciona opções iniciais como no código anterior
   }
 
   /**
@@ -65,6 +69,7 @@ export class QuestionAnswerFormComponent implements OnInit {
   get optionsArray(): FormArray {
     return this.questionForm.get('options') as FormArray;
   }
+
   /**
    * Adiciona as opções iniciais ao formulário.
    */
@@ -74,18 +79,14 @@ export class QuestionAnswerFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Adiciona uma nova opção ao array de opções.
-   */
   addOption(): void {
     if (this.optionsArray.length < 4) {
       const optionGroup = this.fb.group({
-        description: ['', [Validators.required]],
+        description: [' ', [Validators.required]],
         correct: [false],
         question: [null],  // Adiciona a propriedade `question`, mesmo que seja null por enquanto
       });
 
-      // Monitora o checkbox "correct" para manter apenas uma opção correta
       optionGroup.get('correct')?.valueChanges.subscribe((isChecked) => {
         if (isChecked) {
           this.clearCorrectOptions(optionGroup);
@@ -95,10 +96,7 @@ export class QuestionAnswerFormComponent implements OnInit {
       this.optionsArray.push(optionGroup);
     }
   }
-  /**
-   * Garante que apenas uma opção seja marcada como correta.
-   * @param selectedOptionGroup Grupo selecionado.
-   */
+
   private clearCorrectOptions(selectedOptionGroup: FormGroup): void {
     this.optionsArray.controls.forEach((control) => {
       if (control !== selectedOptionGroup && control.get('correct')?.value) {
@@ -107,10 +105,6 @@ export class QuestionAnswerFormComponent implements OnInit {
     });
   }
 
-
-  /**
-   * Envia o formulário para o backend usando o `QuestionService`.
-   */
   onSubmit(): void {
     if (this.questionForm.valid) {
       const questionData: Question = {
@@ -118,11 +112,11 @@ export class QuestionAnswerFormComponent implements OnInit {
         options: this.questionForm.value.options.map((option: any) => ({
           description: option.description,
           correct: option.correct,
-          question: option.question,  // Ajuste conforme necessário
+          question: option.question,
         })),
       };
 
-      this.questionService.createQuestion(questionData).subscribe({
+      this.service.save(questionData).subscribe({
         next: () => {
           this.toastr.success('Pergunta cadastrada com sucesso!');
           this.resetForm();
@@ -136,22 +130,23 @@ export class QuestionAnswerFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Reseta o formulário para o estado inicial.
-   */
   private resetForm(): void {
-    this.questionForm.reset();
-    this.optionsArray.clear(); // Limpa o array de opções
-    this.addInitialOptions(); // Recria as 4 opções iniciais
+    this.questionForm.reset({
+      description: ' ',
+      options: []
+    });
+
+    this.optionsArray.clear();
+    this.addInitialOptions();
   }
 
-  /**
-   * Retorna o rótulo da alternativa (ex.: A, B, C, etc.).
-   * @param index Índice da alternativa.
-   * @returns Rótulo da alternativa.
-   */
+
+  public goToQuestionPage(): void {
+    this.goToPage('question');
+  }
+
   getAlternativaLabel(index: number): string {
-    const alternativas = ['A', 'B', 'C', 'D', 'E'];
-    return alternativas[index] || '';
+    const labels = ['A', 'B', 'C', 'D'];  // Array com as letras
+    return labels[index] || String.fromCharCode(97 + index); // Garante que, se o índice for maior que 3, a letra seja gerada
   }
 }
