@@ -39,7 +39,6 @@ export class QuestionService {
     const headers = this.getHttpHeaders();
     return this.http.get<Question[]>(this.apiUrl, {
       headers,
-      withCredentials: true  // Adicionando o cabeçalho de credenciais
     }).pipe(
         catchError((error) => {
           console.error('Erro ao buscar perguntas:', error);
