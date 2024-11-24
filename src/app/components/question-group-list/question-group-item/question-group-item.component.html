@@ -14,17 +14,15 @@
       </mat-form-field>
 
       <!-- Campo de Perguntas -->
-      <mat-form-field>
-        <mat-label>Perguntas</mat-label>
-        <!-- Usando mat-select para seleção de perguntas -->
+      <mat-form-field appearance="fill">
+        <mat-label>Questões</mat-label>
         <mat-select formControlName="questions_group_question" multiple>
           <mat-option *ngFor="let question of questions" [value]="question.id">
             {{ question.description }}
           </mat-option>
         </mat-select>
-        <!-- Verificação de erro -->
-        <mat-error *ngIf="formGroup.get('questions_group_question')?.hasError('required')">
-          Seleção de perguntas obrigatória
+        <mat-error *ngIf="formGroup.get('questions_group_question')">
+          Selecione ao menos uma questão.
         </mat-error>
       </mat-form-field>
     </div>
