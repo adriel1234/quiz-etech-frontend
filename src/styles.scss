@@ -16,13 +16,16 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
   height: 100%;
+  background-color: #0FB8DE !important;
 
   @include mat.all-component-themes($theme);
-  background: linear-gradient(176deg, rgba(15,184,222,1) 0%, rgba(53,179,11,0.6587009803921569) 80%) !important;
 }
 
 html {
   height: 100%;
+  background-color: #0FB8DE;
+
+
 }
 
 table {
