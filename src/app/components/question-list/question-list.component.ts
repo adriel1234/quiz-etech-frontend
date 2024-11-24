@@ -87,20 +87,6 @@ export class QuestionListComponent implements OnInit {
   }
 
 
-  public openEditDialog(question: Question): void {
-    const dialogRef = this.dialog.open(QuestionAnswerFormComponent, {
-      width: '400px',
-      data: question,  // Passa a questão para o formulário
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      // Verifica o que foi retornado após o fechamento do diálogo (se necessário)
-      if (result) {
-        // Ação após editar a questão, se necessário
-      }
-    });
-  }
-
 
   public goToPage(route: string): void {
     const extras: NavigationExtras = { queryParamsHandling: 'merge' };

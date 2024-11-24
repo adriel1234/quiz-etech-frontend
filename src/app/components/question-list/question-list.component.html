@@ -9,10 +9,10 @@
     </mat-form-field>
 
     <button mat-fab (click)="search()" class="btn-default">
-      <mat-icon>search</mat-icon>
+      <mat-icon class="custom-icon">search</mat-icon>
     </button>
     <button mat-fab (click)="goToPage('question/create')" class="btn-default">
-      <mat-icon>add</mat-icon>
+      <mat-icon class="custom-icon">add</mat-icon>
     </button>
   </div>
 
@@ -51,7 +51,7 @@
 
     @if (dataSource.length === 0) {
       <div class="flex flex-center align-items-center justify-content-center">
-        <h3>Nenhum produto encontrado</h3>
+        <h3>Nenhuma Questão encontrada</h3>
       </div>
     }
 
