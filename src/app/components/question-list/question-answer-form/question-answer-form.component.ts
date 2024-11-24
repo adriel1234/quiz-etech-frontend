@@ -75,26 +75,17 @@ export class QuestionAnswerFormComponent extends BaseComponent<Question> impleme
    */
   private addInitialOptions(): void {
     while (this.optionsArray.length < 4) {
-      this.addOption();
+      this.addOption({ description: ' ', correct: false });
     }
   }
 
-  addOption(): void {
-    if (this.optionsArray.length < 4) {
-      const optionGroup = this.fb.group({
-        description: [' ', [Validators.required]],
-        correct: [false],
-        question: [null],  // Adiciona a propriedade `question`, mesmo que seja null por enquanto
-      });
+  private addOption(option: Partial<Option> = { description: '', correct: false }): void {
+    const optionGroup = this.fb.group({
+      description: [option.description || '', Validators.required], // Valor inicial para description
+      correct: [option.correct || false] // Valor inicial para correct
+    });
 
-      optionGroup.get('correct')?.valueChanges.subscribe((isChecked) => {
-        if (isChecked) {
-          this.clearCorrectOptions(optionGroup);
-        }
-      });
-
-      this.optionsArray.push(optionGroup);
-    }
+    this.optionsArray.push(optionGroup);
   }
 
   private clearCorrectOptions(selectedOptionGroup: FormGroup): void {
