@@ -16,7 +16,10 @@
 // }
 
 
+import {Option} from './option.model';
+
 export interface Question {
   id: number;
   description: string;
+  options: Option[];
 }

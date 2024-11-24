@@ -24,6 +24,7 @@ export class QuestionService {
     return headers;
   }
 
+
   createQuestion(questionData: Question): Observable<Question> {
     const headers = this.getHttpHeaders();
     return this.http.post<Question>(this.apiUrl, questionData, { headers }).pipe(
@@ -36,10 +37,37 @@ export class QuestionService {
 
   getQuestions(): Observable<Question[]> {
     const headers = this.getHttpHeaders();
-    return this.http.get<Question[]>(this.apiUrl, { headers }).pipe(
+    return this.http.get<Question[]>(this.apiUrl, {
+      headers,
+      withCredentials: true  // Adicionando o cabeçalho de credenciais
+    }).pipe(
+        catchError((error) => {
+          console.error('Erro ao buscar perguntas:', error);
+          return throwError(() => new Error('Falha ao buscar perguntas.'));
+        })
+    );
+  }
+
+  // getById(id: number): Observable<Question> {
+  //   console.log(sessionStorage.getItem('auth-token'));
+  //   const headers = this.getHttpHeaders();
+  //   return this.http.get<Question>(`${this.apiUrl}${id}`, {
+  //     headers,
+  //     withCredentials: true
+  //   }).pipe(
+  //       catchError((error) => {
+  //         console.error('Erro ao buscar questão:', error);
+  //         return throwError(() => new Error('Falha ao buscar questão.'));
+  //       })
+  //   );
+  // }
+
+  getById(id: number): Observable<Question> {
+    const headers = this.getHttpHeaders();
+    return this.http.get<Question>(`${this.apiUrl}${id}/`, { headers }).pipe(
       catchError((error) => {
-        console.error('Erro ao buscar perguntas:', error);
-        return throwError(() => new Error('Falha ao buscar perguntas.'));
+        console.error('Erro ao buscar questão:', error);
+        return throwError(() => new Error('Falha ao buscar questão.'));
       })
     );
   }
@@ -53,6 +81,8 @@ export class QuestionService {
       })
     );
   }
+
+
   deleteQuestion(id: number): Observable<void> {
     const headers = this.getHttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}${id}/`, { headers }).pipe(

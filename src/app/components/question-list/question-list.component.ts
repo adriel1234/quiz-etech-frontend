@@ -15,6 +15,7 @@ import {URLS} from '../../shared/urls';
 import {Question} from '../../shared/models/question.model';
 import {FormsModule} from '@angular/forms';
 import {MatCard} from '@angular/material/card';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-question-list',
@@ -24,50 +25,85 @@ import {MatCard} from '@angular/material/card';
   styleUrls: ['./question-list.component.scss'],
 })
 export class QuestionListComponent implements OnInit {
-  displayedColumns: string[] = ['id','description', 'actions'];
+  displayedColumns: string[] = ['id', 'description', 'actions'];
   public dataSource: Question[] = [];
   public searchDescription: string = '';
 
-  private router: Router = new Router();
-
   private service: BaseService<Question>;
 
-
-  constructor(private http: HttpClient) {
+  // Injetando o BaseService diretamente no construtor
+  constructor(
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private toastr: ToastrService,
+    private router: Router
+  ) {
+    // Inicializa o BaseService com a URL correta para questões
     this.service = new BaseService<Question>(http, URLS.QUESTION);
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.search();
   }
 
   public search(resetIndex: boolean = false): void {
 
     this.service.addParameter('description', this.searchDescription);
+
+    // Usando o BaseService para obter todos os itens
     this.service.getAll().subscribe({
       next: (data: Question[]) => {
-        this.dataSource = data;
+        this.dataSource = data.sort((a, b) => a.id - b.id);
       },
-      error: (_) => {
-        console.error('Error loading QuestionGroup');
-      }
+      error: () => {
+        this.toastr.error('Erro ao carregar as perguntas.');
+      },
     });
   }
+
 
   public deleteObject(id: number): void {
     this.service.delete(id).subscribe({
-      next: (_) => {
-        this.search();
+      next: () => {
+        this.toastr.success('Pergunta excluída com sucesso.');
+        this.search(); // Atualiza a lista após a exclusão
       },
-      error: (_) => {
-        console.error('Error deleting Question');
+      error: () => {
+        this.toastr.error('Erro ao excluir a pergunta.');
+      },
+    });
+  }
+
+  public updateObject(question: Question): void {
+    this.service.update(question.id, question).subscribe({
+      next: () => {
+        this.toastr.success('Atualização bem-sucedida.');
+        this.search(); // Atualiza a lista após a atualização
+      },
+      error: (err) => {
+        this.toastr.error('Erro ao atualizar a pergunta.', err);
+      },
+    });
+  }
+
+
+  public openEditDialog(question: Question): void {
+    const dialogRef = this.dialog.open(QuestionAnswerFormComponent, {
+      width: '400px',
+      data: question,  // Passa a questão para o formulário
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      // Verifica o que foi retornado após o fechamento do diálogo (se necessário)
+      if (result) {
+        // Ação após editar a questão, se necessário
       }
     });
   }
 
 
-  public goToPage(route:string):void{
-    const extras: NavigationExtras = {queryParamsHandling:'merge'};
-    this.router.navigate([route],extras).then();
+  public goToPage(route: string): void {
+    const extras: NavigationExtras = { queryParamsHandling: 'merge' };
+    this.router.navigate([route], extras).then();
   }
 }

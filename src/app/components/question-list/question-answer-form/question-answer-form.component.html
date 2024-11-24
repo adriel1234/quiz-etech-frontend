@@ -1,5 +1,5 @@
 <div class="flex flex-column gap-1">
-  <h1>Cadastro de Pergunta</h1>
+  <h1>{{ questionId ? 'Edição de Pergunta' : 'Cadastro de Pergunta' }}</h1> <!-- Título Dinâmico -->
 
   <form [formGroup]="questionForm" (ngSubmit)="onSubmit()" class="form-container">
 
@@ -7,7 +7,9 @@
       <button
         mat-raised-button
         [disabled]="questionForm.invalid"
-        matTooltip="Cadastrar Pergunta">Cadastrar pergunta</button>
+        matTooltip="{{ questionId ? 'Atualizar Pergunta' : 'Cadastrar Pergunta' }}"> <!-- Texto dinâmico no Tooltip -->
+        {{ questionId ? 'Atualizar Pergunta' : 'Cadastrar Pergunta' }} <!-- Texto dinâmico no botão -->
+      </button>
     </div>
 
     <!-- Campo de descrição da pergunta -->
@@ -21,9 +23,6 @@
       </mat-form-field>
     </div>
 
-
-
-
     <!-- Opções de respostas -->
     <div formArrayName="options">
       <div *ngFor="let option of optionsArray.controls; let i = index" [formGroupName]="i" class="flex flex-column gap-2 mb-3">
@@ -36,7 +35,12 @@
         <!-- Layout flex para manter o checkbox e o campo de descrição lado a lado -->
         <div class="flex gap-2 align-items-center">
           <!-- Checkbox -->
-          <mat-checkbox formControlName="correct" class="mt-0"></mat-checkbox>
+          <mat-checkbox
+            [formControlName]="'correct'"
+            [checked]="option.get('correct')?.value"
+            (change)="clearCorrectOptions(option)"
+          >
+          </mat-checkbox>
 
           <!-- Campo de descrição -->
           <mat-form-field style="width: 100%;">
@@ -51,7 +55,6 @@
       </div>
 
     </div>
-
 
   </form>
 </div>

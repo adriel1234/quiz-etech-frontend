@@ -45,5 +45,6 @@ export const routes: Routes = [
     path: 'question-groups/:action',
     component: QuestionGroupItemComponent,
     canActivate: [AuthGuard]
-  }
+  },
+  { path: 'question/edit/:id', component: QuestionAnswerFormComponent },
 ];
