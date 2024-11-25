@@ -125,7 +125,7 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
     if (this.formGroup.valid) {
       this.validateForm();
       this.service.save(this.object).subscribe((response) => {
-        this.goToPage('question-groups');
+        this.goToPage('/admin/question-groups');
       });
     }
   }
@@ -141,7 +141,7 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
         this.service.update(this.object.id!, this.object).subscribe(
           (response) => {
             this.snackBar.open('Grupo de perguntas atualizado com sucesso', 'Fechar', { duration: 3000 });
-            this.goToPage('question-groups');
+            this.goToPage('admin/question-groups');
           },
           (error) => {
             console.error('Erro ao atualizar o grupo de perguntas', error);
@@ -152,7 +152,7 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
         this.service.save(this.object).subscribe(
           (response) => {
             this.snackBar.open('Grupo de perguntas salvo com sucesso', 'Fechar', { duration: 3000 });
-            this.goToPage('question-groups');
+            this.goToPage('admin/question-groups');
           },
           (error) => {
             console.error('Erro ao salvar o grupo de perguntas', error);

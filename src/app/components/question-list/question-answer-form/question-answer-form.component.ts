@@ -199,7 +199,7 @@ export class QuestionAnswerFormComponent extends BaseComponent<Question> impleme
 
 
   public goToQuestionPage(): void {
-    this.goToPage('question');
+    this.goToPage('/admin/question');
   }
 
   getAlternativaLabel(index: number): string {
