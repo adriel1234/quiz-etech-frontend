@@ -2,7 +2,7 @@ import {ModelBase} from './model-base';
 
 export interface QuizResult {
   id?:string,
-  quizId:string
+  quizId:string,
   name:string,
   score?:string,
   percentage?:string,

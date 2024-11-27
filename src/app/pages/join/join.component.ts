@@ -25,12 +25,16 @@ export class JoinComponent {
   router = inject(Router)
 
   join(){
+    function string(id: number) {
+      return '';
+    }
+
     if(this.name && this.code){
       this.testService.getQuizByCode(this.code).subscribe((result) => {
         let quiz=result[0];
         let quizResult:QuizResult={
           name:this.name,
-          quizId:quiz.id,
+          quizId:string(quiz.id),
         }
         this.testService.joinQuiz(quizResult).subscribe(response =>{
             this.testService.joinQuiz(quizResult).subscribe(response =>{})
