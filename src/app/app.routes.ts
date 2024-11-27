@@ -12,6 +12,9 @@ import {
 } from './components/question-group-list/question-group-item/question-group-item.component';
 import {GroupQuestionListComponent} from './components/question-group-list/group-question-list.component';
 import {AdminComponent} from './pages/admin/admin.component';
+import {JoinComponent} from './pages/join/join.component';
+import {ScoreComponent} from './pages/score/score.component';
+import {InfoComponent} from './pages/info/info.component';
 
 export const routes: Routes = [
   {
@@ -70,5 +73,18 @@ export const routes: Routes = [
         data: { title: 'Editar Quizz' },
       }
     ]
+  },
+  {
+    path: 'join',
+    component: JoinComponent,
+  },
+  {
+    path: 'info',
+    component: InfoComponent,
+  },
+  {
+    path: 'score',
+    component: ScoreComponent,
   }
+
 ];
