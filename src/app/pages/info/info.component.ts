@@ -7,6 +7,7 @@ import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {join} from '@angular/compiler-cli';
+import {QuizResult} from '../../shared/models/quiz-result';
 
 @Component({
   selector: 'app-info',
@@ -26,19 +27,20 @@ export class InfoComponent {
   testService=inject(TestService);
   quizInfo!:Quiz;
   router=inject(Router);
+  quizResult!:QuizResult;
   ngOnInit(){
-    let quizResult = this.testService.quizResult
-    if (!quizResult){
+    this.quizResult = this.testService.quizResult
+    if (!this.quizResult){
       this.router.navigateByUrl("/info");
       return;
     }
-    let quizId = quizResult.quizId;
+    let quizId = this.quizResult.quizId;
     this.testService.getQuizById(quizId).subscribe((quiz) => {
       this.quizInfo=quiz;
     })
   }
   join(){
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/match');
   }
 
 }

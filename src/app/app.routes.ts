@@ -15,6 +15,7 @@ import {AdminComponent} from './pages/admin/admin.component';
 import {JoinComponent} from './pages/join/join.component';
 import {ScoreComponent} from './pages/score/score.component';
 import {InfoComponent} from './pages/info/info.component';
+import {MatchComponent} from './pages/match/match.component';
 
 export const routes: Routes = [
   {
@@ -85,6 +86,10 @@ export const routes: Routes = [
   {
     path: 'score',
     component: ScoreComponent,
+  },
+  {
+    path: 'match',
+    component: MatchComponent,
   }
 
 ];
