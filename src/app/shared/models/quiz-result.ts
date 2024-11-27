@@ -1,13 +1,13 @@
 import {ModelBase} from './model-base';
 
 export interface QuizResult {
-  id?:number,
-  quizId:number
+  id?:string,
+  quizId:string
   name:string,
-  score?:number,
-  percentage?:number,
-  correct?:number,
-  inCorrect?:number,
-  unAttempt?:number
-  response?:{questionId:number, answerOptionId:string}[]
+  score?:string,
+  percentage?:string,
+  correct?:string,
+  inCorrect?:string,
+  unAttempt?:string
+  response?:{questionId:string, answerOptionId:string}[]
 }

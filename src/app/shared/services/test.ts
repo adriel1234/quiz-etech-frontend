@@ -17,4 +17,7 @@ export class TestService {
   joinQuiz(quizResult:QuizResult){
     return this.http.post<QuizResult[]>("http://localhost:8000/api/quizResults", quizResult);
   }
+  getQuizById(quizId: string){
+    return this.http.get<Quiz>("http://localhost:8000/api/quiz/" + quizId);
+  }
 }

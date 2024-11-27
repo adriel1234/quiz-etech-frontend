@@ -4,6 +4,7 @@ import {MatInput, MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {TestService} from '../../shared/services/test';
 import {QuizResult} from '../../shared/models/quiz-result';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-join',
@@ -20,7 +21,8 @@ import {QuizResult} from '../../shared/models/quiz-result';
 export class JoinComponent {
   name!: string;
   code!: string;
-  testService=inject(TestService)
+  testService=inject(TestService);
+  router = inject(Router)
 
   join(){
     if(this.name && this.code){
@@ -31,7 +33,8 @@ export class JoinComponent {
           quizId:quiz.id,
         }
         this.testService.joinQuiz(quizResult).subscribe(response =>{
-            console.log(response);
+            this.testService.joinQuiz(quizResult).subscribe(response =>{})
+            this.router.navigateByUrl('/quiz-info');
         });
       })
 
