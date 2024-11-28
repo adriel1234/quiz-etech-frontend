@@ -7,6 +7,7 @@ import {Question} from '../../shared/models/question.model';
 import {Quiz} from '../../shared/models/quiz';
 import {QuizResult} from '../../shared/models/quiz-result';
 import {Router} from '@angular/router';
+import {MatRadioModule} from '@angular/material/radio';
 
 @Component({
   selector: 'app-match',
@@ -15,7 +16,8 @@ import {Router} from '@angular/router';
     MatButton,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    MatRadioModule,
   ],
   templateUrl: './match.component.html',
   styleUrl: './match.component.scss'
@@ -27,6 +29,7 @@ export class MatchComponent {
   questions:Question[] = [];
   quizInfo!:Quiz;
   quizResult!:QuizResult;
+  currentQuestion:number = 0;
   ngOnInit(){
     this.quizResult = this.testService.quizResult
     if(!this.quizResult){}
@@ -34,8 +37,12 @@ export class MatchComponent {
       this.questions = results;
     });
     this.testService.getQuizById(this.quizResult.quizId).subscribe(quiz => {
-    this.quizInfo= result;
+    this.quizInfo= quiz;
     });
+  }
+  get getCurrentQuestion(){
+    let questionId = this.quizInfo.questions[this.currentQuestion];
+    return this.questions.find(x => x.id === questionId);
   }
 
 }

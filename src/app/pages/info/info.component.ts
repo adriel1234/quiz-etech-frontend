@@ -8,6 +8,7 @@ import {MatInput} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {join} from '@angular/compiler-cli';
 import {QuizResult} from '../../shared/models/quiz-result';
+import {Question} from '../../shared/models/question.model';
 
 @Component({
   selector: 'app-info',
@@ -39,7 +40,7 @@ export class InfoComponent {
       this.quizInfo=quiz;
     })
   }
-  join(){
+  start(){
     this.router.navigateByUrl('/match');
   }
 

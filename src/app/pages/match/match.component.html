@@ -1,12 +1,18 @@
 <div class="flex justify-content-center">
+  @if (currentQuestion){
   <div class="flex flex-column shadow-3">
 <!--    nome do grupo de perguntas-->
     <h4 class="text-lg">{{quizInfo.name}}</h4>
     <div class="p-4 shadow-3">
-      <p>Question Content</p>
+<!--      descrição da pergunta-->
+      <p>{{currentQuestion.content}}</p>
       <div class="w-full p-4 shadow-1">
+<!--        as opções da pergunta-->
+        @for (option of currentQuestion.options; track option) {}
+        <mat-radio-button [value]=""]></mat-radio-button>
         <p>Option</p>
       </div>
     </div>
   </div>
+  }
 </div>
