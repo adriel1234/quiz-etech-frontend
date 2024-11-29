@@ -1,0 +1,39 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "content": "What is the capital of France?",
+      "marks": 1,
+      "negativeMarks": 1,
+      "options": [
+        {
+          "id": "a",
+          "content": "1",
+          "isCorrect": false
+        },
+        {
+          "optionId": "b",
+          "content": "true",
+          "isCorrect": false
+        },
+        {
+          "optionId": "c",
+          "content": "false",
+          "isCorrect": true
+        },
+        {
+          "optionId": "d",
+          "content": "Rome",
+          "isCorrect": false
+        }
+      ]
+    }
+  ],
+  "quizs":[{
+    "id": 1,
+    "name": "Java quiz 1",
+    "code": "jquiz01",
+    "questions": [1,2,3,4]
+  }],
+  "quizResults": []
+}

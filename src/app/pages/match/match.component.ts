@@ -29,7 +29,7 @@ export class MatchComponent {
   questions:Question[] = [];
   quizInfo!:Quiz;
   quizResult!:QuizResult;
-  currentQuestion:number = 0;
+  currentQuestionNo:number = 0;
   ngOnInit(){
     this.quizResult = this.testService.quizResult
     if(!this.quizResult){}
@@ -40,9 +40,47 @@ export class MatchComponent {
     this.quizInfo= quiz;
     });
   }
-  get getCurrentQuestion(){
-    let questionId = this.quizInfo.questions[this.currentQuestion];
+  get currentQuestion(){
+    let questionId = this.quizInfo.questions[this.currentQuestionNo];
     return this.questions.find(x => x.id === questionId);
   }
-
+  currentSelectedOptionId = '';
+  next(){
+    this.quizResult.response?.push({
+      questionId:this.currentQuestion!.id,
+      answerOptionId:this.currentSelectedOptionId
+    })
+    this.currentQuestionNo++;
+    this.currentSelectedOptionId="";
+  }
+  submit(){
+  this.next()
+  this.calculateResult()
+  this.router.navigate(['/score'])
+  }
+  calculateResult(){
+    let score = 0;
+    let correct = 0;
+    let incorrect = 0;
+    let unAttempted = 0;
+    let percentage = 0;
+    let totalMark = 0;
+    this.quizResult.response?.forEach((response) => {
+      let questionId = response.questionId;
+      let selectedOptionId=response.answerOptionId;
+      let question=this.questions.find(x => x.id === questionId);
+      let correctOptionId = question?.options.find(x => x.isCorrect==true);
+      totalMark += question!.marks;
+      if (!selectedOptionId){
+        unAttempted++;
+      } else if (selectedOptionId == questionId?.id){
+        correct++;
+        score+=question!.marks;
+      } else {
+        incorrect++;
+        score-=question!.negativemarks;
+      }
+    });
+    percentage = Math.round((score/totalMark) * 100);
+  }
 }

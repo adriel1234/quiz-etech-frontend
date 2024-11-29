@@ -4,13 +4,25 @@
 <!--    nome do grupo de perguntas-->
     <h4 class="text-lg">{{quizInfo.name}}</h4>
     <div class="p-4 shadow-3">
+      <p>Me ajuda man kkkkjkkjkk</p>
 <!--      descrição da pergunta-->
       <p>{{currentQuestion.content}}</p>
       <div class="w-full p-4 shadow-1">
 <!--        as opções da pergunta-->
-        @for (option of currentQuestion.options; track option) {}
-        <mat-radio-button [value]=""]></mat-radio-button>
-        <p>Option</p>
+        @for (content of currentQuestion.options; track $index) {
+        <div (click)="currentSelectedOptionId=option.id">
+        <mat-radio-button [value]="" [checked]="currentSelectedOptionId==option.id" ></mat-radio-button>
+          <p>Option</p>
+        </div>
+        }
+        <div class="flex justify-end">
+          @if (currentQuestionNo==quizInfo.questions.length-1){
+            <button mat-raised-button (click)="submit()">Submit</button>
+          } @else {
+
+          }
+          <button mat-raised-button (click)="next()">Save & Next</button>
+        </div>
       </div>
     </div>
   </div>
