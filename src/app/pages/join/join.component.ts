@@ -35,6 +35,7 @@ export class JoinComponent {
         let quizResult:QuizResult={
           name:this.name,
           quizId:string(quiz.id),
+          response: []
         }
         this.testService.joinQuiz(quizResult).subscribe(response =>{
             this.testService.joinQuiz(quizResult).subscribe(response =>{})

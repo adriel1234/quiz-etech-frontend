@@ -35,5 +35,9 @@
     "code": "jquiz01",
     "questions": [1,2,3,4]
   }],
-  "quizResults": []
+  "quizResults": [{
+    "name": "Place Holder",
+    "quizId": 1,
+    "id": 1
+  }]
 }

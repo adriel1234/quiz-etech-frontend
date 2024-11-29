@@ -24,4 +24,10 @@ export class TestService {
   getQuizById(quizId: string){
     return this.http.get<Quiz>("http://localhost:8000/api/quiz/" + quizId);
   }
+  upDateQuizResult(id:number, result:QuizResult){
+    return this.http.put<any>("http://localhost:8000/api/quizResults" + id, result);
+  }
+  getQuizResult(id:number){
+    return this.http.get<QuizResult>("http://localhost:8000/api/quizResults" + id);
+  }
 }

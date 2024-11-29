@@ -56,12 +56,13 @@ export class MatchComponent {
   submit(){
   this.next()
   this.calculateResult()
+  this.testService.upDateQuizResult(this.quizResult.id!,this.quizResult).subscribe();
   this.router.navigate(['/score'])
   }
   calculateResult(){
     let score = 0;
     let correct = 0;
-    let incorrect = 0;
+    let inCorrect = 0;
     let unAttempted = 0;
     let percentage = 0;
     let totalMark = 0;
@@ -69,7 +70,7 @@ export class MatchComponent {
       let questionId = response.questionId;
       let selectedOptionId=response.answerOptionId;
       let question=this.questions.find(x => x.id === questionId);
-      let correctOptionId = question?.options.find(x => x.isCorrect==true);
+      let correctOptionId = question?.options.find(x => x.correct==true);
       totalMark += question!.marks;
       if (!selectedOptionId){
         unAttempted++;
@@ -77,10 +78,15 @@ export class MatchComponent {
         correct++;
         score+=question!.marks;
       } else {
-        incorrect++;
+        inCorrect++;
         score-=question!.negativemarks;
       }
     });
     percentage = Math.round((score/totalMark) * 100);
+    this.quizResult.score=score;
+    this.quizResult.correct =correct;
+    this.quizResult.inCorrect=inCorrect;
+    this.quizResult.unAttempt=unAttempted;
+    this.quizResult.percentage=percentage;
   }
 }
