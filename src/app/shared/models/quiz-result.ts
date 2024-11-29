@@ -9,5 +9,5 @@ export interface QuizResult {
   correct?:number,
   inCorrect?:number,
   unAttempt?:number
-  response?:{questionId:string, answerOptionId:string}[]
+  response?:{questionId:number, answerOptionId:string}[]
 }

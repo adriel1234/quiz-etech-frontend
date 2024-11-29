@@ -3,11 +3,11 @@ import {MatButton} from '@angular/material/button';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {TestService} from '../../shared/services/test';
-import {Question} from '../../shared/models/question.model';
 import {Quiz} from '../../shared/models/quiz';
 import {QuizResult} from '../../shared/models/quiz-result';
 import {Router} from '@angular/router';
 import {MatRadioModule} from '@angular/material/radio';
+import {Question} from '../../shared/models/question.model';
 
 @Component({
   selector: 'app-match',
@@ -74,7 +74,7 @@ export class MatchComponent {
       totalMark += question!.marks;
       if (!selectedOptionId){
         unAttempted++;
-      } else if (selectedOptionId == questionId?.id){
+      } else if (selectedOptionId === String(correctOptionId?.id)){
         correct++;
         score+=question!.marks;
       } else {

@@ -22,4 +22,6 @@ export interface Question {
   id: number;
   description: string;
   options: Option[];
+  marks: number;
+  negativemarks: number;
 }
