@@ -2,18 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
-import { ActivatedRoute } from '@angular/router';
-import { QuestionService } from '../../../shared/services/question.service';
-import { CommonModule } from '@angular/common';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import {MatListOption, MatSelectionList } from '@angular/material/list';
+import {ActivatedRoute} from '@angular/router';
+import {QuestionService} from '../../../shared/services/question.service';
+import {CommonModule} from '@angular/common';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatListOption, MatSelectionList} from '@angular/material/list';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
-import {
-  Validators,
-  FormGroup,
-  ReactiveFormsModule, FormControl, FormArray, FormBuilder
-} from '@angular/forms';
-import { MatSnackBar} from '@angular/material/snack-bar';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {QuestionGroup} from '../../../shared/models/question-group.model';
 import {BaseComponent} from '../../base.component';
 import {HttpClient} from '@angular/common/http';
@@ -47,6 +44,7 @@ import {firstValueFrom} from 'rxjs';
     CommonModule,
     MatSelect,
     MatOption,
+    MatPaginatorModule,
   ],
   templateUrl: './question-group-item.component.html',
   styleUrl: './question-group-item.component.scss'
@@ -57,7 +55,12 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   public questions: Question[] = [];
   public questionGroupId?: number;
   public isFormVisible: boolean = true;
+  public paginatedQuestions: Question[] = [];
+  public pageSize = 25;
+  public pageIndex = 0;
 
+  // Mapeamento para armazenar os IDs das perguntas selecionadas
+  private selectedQuestionIds: Set<number> = new Set();
 
   constructor(http: HttpClient,
               private questionService: QuestionService,
@@ -75,10 +78,8 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
     const action: string | null = this.route.snapshot.paramMap.get('action');
     const id: string | null = this.route.snapshot.paramMap.get('id');
 
-    // novo formulario
     if (action === 'create') {
       this.loadQuestions();  // Carregar perguntas para o formulário novo
-      // verirfica se action é edit e se id é um numero
     } else if (action === 'edit' && id && !isNaN(Number(id))) {
       this.questionGroupId = Number(id);
       this.loadQuestionGroup();  // Carregar dados do QuestionGroup para edição
@@ -88,37 +89,32 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
     }
   }
 
+  // Carregar todas as perguntas
   async loadQuestions(): Promise<void> {
     try {
-      // Usando firstValueFrom para obter os dados do Observable
-      const data: Question[] = await firstValueFrom(this.questionService.getQuestions());
-
-      this.questions = data;
+      this.questions = await firstValueFrom(this.questionService.getQuestions());
+      this.paginatedQuestions = this.questions.slice(0, this.pageSize);
       const formArray = this.formGroup.get('questions_group_question') as FormArray;
 
-      // Adicionando FormControl para cada pergunta com valor inicial 'false'
-      data.forEach(() => formArray.push(new FormControl(false)));
+      // Limpar o FormArray antes de preencher
+      formArray.clear();
+      this.questions.forEach(() => formArray.push(new FormControl(false))); // Adicionar controle para todas as perguntas
 
-      // A Promise será resolvida quando os dados forem carregados
     } catch (error) {
       console.error('Erro ao carregar perguntas', error);
       this.snackBar.open('Erro ao carregar perguntas', 'Fechar', { duration: 3000 });
-
-      // Rejeitando a Promise em caso de erro
       throw error;
     }
   }
 
-  // metodo para carregas as perguntas  selecionadas pegando da API pelo ID
-
+  // Carregar um QuestionGroup existente
   async loadQuestionGroup(): Promise<void> {
     try {
       const data: QuestionGroup | undefined = await this.service.getById(this.questionGroupId!).toPromise();
 
-      // Se a resposta for undefined ou não encontrada (status 404), exibe a mensagem e oculta o formulário
       if (!data) {
         this.snackBar.open('Grupo de perguntas não encontrado!', 'Fechar', { duration: 3000 });
-        this.isFormVisible = false; // Esconde o formulário
+        this.isFormVisible = false;
         return;
       }
 
@@ -127,41 +123,88 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
         description: data.description,
       });
 
-      const selectedQuestions = data.questions_group_question || [];
-      await this.loadQuestions(); // Carregar as perguntas
-
-      const formArray = this.formGroup.get('questions_group_question') as FormArray;
-      formArray.controls.forEach((control, index) => {
-        if (selectedQuestions.includes(this.questions[index]?.id)) {
-          control.setValue(true);
-        } else {
-          control.setValue(false);
-        }
+      // Atualizar o conjunto de perguntas selecionadas com base nos IDs
+      data.questions_group_question?.forEach((questionId: number) => {
+        this.selectedQuestionIds.add(questionId);
       });
+
+      await this.loadQuestions();
+      this.syncSelectionsWithPage();
+
     } catch (error) {
-      // Tratamento de erro adicional para garantir que qualquer erro de requisição também ocultará o formulário
       console.error('Erro ao carregar QuestionGroup', error);
       this.snackBar.open('Erro ao carregar o grupo de perguntas', 'Fechar', { duration: 3000 });
-      this.isFormVisible = false; // Esconde o formulário em caso de erro
+      this.isFormVisible = false;
     }
   }
 
+  // Sincronizar as seleções com a página atual
+  syncSelectionsWithPage(): void {
+    const formArray = this.formGroup.get('questions_group_question') as FormArray;
 
+    if (!this.paginatedQuestions || this.paginatedQuestions.length === 0) {
+      console.warn('Nenhuma pergunta disponível na página');
+      return;
+    }
+
+    this.paginatedQuestions.forEach((question, index) => {
+      const formControl = formArray.controls[index];
+
+      // Marcar a questão se o ID estiver selecionado
+      const isSelected = this.selectedQuestionIds.has(question.id);
+      formControl.setValue(isSelected); // Atualizar o estado do checkbox
+    });
+  }
+
+
+  // trata a mudança de pagina no paginator
+  pageEvent(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+
+    const startIndex = this.pageIndex * this.pageSize;
+    this.paginatedQuestions = this.questions.slice(startIndex, startIndex + this.pageSize);
+
+    this.syncSelectionsWithPage(); // Sincronizar seleções ao mudar de página
+  }
+
+  // Atualizar o conjunto de IDs selecionados (internamente)
+  updateSelectedQuestionIds(): void {
+    const formArray = this.formGroup.get('questions_group_question') as FormArray;
+
+    if (!this.paginatedQuestions || this.paginatedQuestions.length === 0) {
+      console.warn('Nenhuma pergunta disponível na página');
+      return; // Retorna sem tentar acessar os dados
+    }
+
+    // Atualizar o conjunto de IDs das perguntas selecionadas
+    formArray.controls.forEach((control, index) => {
+      const question = this.paginatedQuestions[index];
+
+      // Verifique se a pergunta existe antes de acessar seu ID
+      if (question) {
+        if (control.value) {
+          this.selectedQuestionIds.add(question.id); // Adicionar ao conjunto se selecionado
+        } else {
+          this.selectedQuestionIds.delete(question.id); // Remover do conjunto se desmarcado
+        }
+      }
+    });
+
+
+  }
+
+  // salvar e alterar
   saveOrUpdate(): void {
     if (this.formGroup.valid) {
       this.validateForm();
 
-      // Obtendo os valores dos checkboxes
-      const selectedQuestions = this.formGroup.get('questions_group_question')?.value;
+      // Preenche o objeto com os IDs das perguntas selecionadas
+      this.object.questions_group_question = Array.from(this.selectedQuestionIds);
 
-      // Filtrando as perguntas selecionadas (valores 'true' nos checkboxes)
-      this.object.questions_group_question = this.questions
-        .filter((_, index) => selectedQuestions[index])  // Filtrando os selecionados
-        .map(question => question.id);  // Mapeando para os IDs das perguntas
 
-      // Enviando para a API
+      // Envia para a API (atualização ou criação)
       if (this.object.id) {
-        // Atualizando o grupo de perguntas
         this.service.update(this.object.id!, this.object).subscribe({
           next: () => {
             this.snackBar.open('Grupo de perguntas atualizado com sucesso', 'Fechar', { duration: 3000 });
@@ -173,7 +216,6 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
           }
         });
       } else {
-        // Salvando um novo grupo de perguntas
         this.service.save(this.object).subscribe({
           next: () => {
             this.snackBar.open('Grupo de perguntas salvo com sucesso', 'Fechar', { duration: 3000 });
