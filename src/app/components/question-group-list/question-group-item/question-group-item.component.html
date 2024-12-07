@@ -51,8 +51,15 @@
     </mat-checkbox>
   </li>
 </ul>
+
   </span>
     </section>
+
+    <div>
+      <div *ngFor="let question of questions">
+        <input type="checkbox" name="{{question.id}}" [value]="question.id">{{question.description}}
+      </div>
+    </div>
 
 
     <!-- Botão de Envio -->

@@ -100,6 +100,12 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
     });
   }
 
+  // updateQuestion(correct: boolean, index?: number) {
+  //   if (index === undefined) {
+  //     questions
+  //   }
+  // }
+
 
   constructor(http: HttpClient,
               private questionService: QuestionService,  // Injeção do QuestionService
