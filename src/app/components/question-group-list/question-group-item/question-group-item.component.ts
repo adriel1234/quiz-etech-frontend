@@ -20,6 +20,7 @@ import {HttpClient} from '@angular/common/http';
 import {URLS} from '../../../shared/urls';
 import {Question} from '../../../shared/models/question.model';
 import {MatOption, MatSelect} from '@angular/material/select';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-question-group-item',
@@ -102,9 +103,11 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
     });
   }
 
+  // metodo para carregas as perguntas  selecionadas pegando da API pelo ID
   async loadQuestionGroup(): Promise<void> {
     try {
-      const data: QuestionGroup | undefined = await this.service.getById(this.questionGroupId!).toPromise(); // Obtém os dados do QuestionGroup
+      //  Obtém o primeiro valor emitido pelo Observable
+      const data: QuestionGroup | undefined = await firstValueFrom(this.service.getById(this.questionGroupId!)); // Obtém os dados do QuestionGroup // Obtém os dados do QuestionGroup
       if (!data) {
         // Se não houver dados, exibe um erro ou retorna
         console.error('Dados do QuestionGroup não encontrados');
