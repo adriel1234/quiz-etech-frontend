@@ -112,7 +112,6 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
         return; // Finaliza a execução da função caso 'data' seja undefined
       }
 
-      console.log('Dados carregados do QuestionGroup:', data); // Verifica os dados da API
       this.object = data;
 
       this.formGroup.patchValue({
@@ -120,28 +119,22 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
       });
 
       const selectedQuestions = data.questions_group_question || [];
-      console.log('IDs das perguntas selecionadas:', selectedQuestions); // IDs da API
 
       await this.loadQuestions(); // Carregar as perguntas, aguardando a conclusão
 
       // Aguardar até que as perguntas estejam carregadas antes de marcar os checkboxes
       const formArray = this.formGroup.get('questions_group_question') as FormArray;
 
-      // Log para ver os valores da lista de perguntas
-      console.log('Lista de Perguntas:', this.questions);
 
       // Preencher o FormArray com os valores corretos
       formArray.controls.forEach((control, index) => {
         if (selectedQuestions.includes(this.questions[index]?.id)) {
           control.setValue(true); // Marcar o checkbox se o ID estiver na lista
-          console.log(`Checkbox ${index} marcado`);
         } else {
           control.setValue(false); // Desmarcar o checkbox
-          console.log(`Checkbox ${index} desmarcado`);
         }
       });
     } catch (error) {
-      console.error('Erro ao carregar QuestionGroup', error);
       this.snackBar.open('Erro ao carregar o grupo de perguntas', 'Fechar', { duration: 3000 });
     }
   }
@@ -186,7 +179,6 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
       }
     }
   }
-
 
   private validateForm(): void {
     Object.keys(this.formGroup.getRawValue()).forEach((key) => {
