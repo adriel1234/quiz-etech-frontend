@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, computed, OnInit, signal} from '@angular/core';
 import {MatError, MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
 import {MatInput, MatInputModule} from '@angular/material/input';
 import {MatButton, MatButtonModule} from '@angular/material/button';
@@ -26,10 +26,17 @@ import {URLS} from '../../../shared/urls';
 import {Question} from '../../../shared/models/question.model';
 import {MatOption, MatSelect} from '@angular/material/select';
 
+export interface Task {
+  name: string;
+  completed: boolean;
+  subtasks?: Task[];
+}
+
 @Component({
   selector: 'app-question-group-item',
   standalone: true,
   imports: [
+    MatCheckboxModule,
     MatButton,
     MatError,
     MatFormField,
@@ -59,6 +66,39 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   public formGroup: FormGroup;
   public questions: Question[] = [];
   public questionGroupId?: number;
+
+
+
+  readonly task = signal<Task>({
+    name: 'Parent task',
+    completed: false,
+    subtasks: [
+      {name: 'Child task 1', completed: false},
+      {name: 'Child task 2', completed: false},
+      {name: 'Child task 3', completed: false},
+    ],
+  });
+
+  readonly partiallyComplete = computed(() => {
+    const task = this.task();
+    if (!task.subtasks) {
+      return false;
+    }
+    return task.subtasks.some(t => t.completed) && !task.subtasks.every(t => t.completed);
+  });
+
+  update(completed: boolean, index?: number) {
+    this.task.update(task => {
+      if (index === undefined) {
+        task.completed = completed;
+        task.subtasks?.forEach(t => (t.completed = completed));
+      } else {
+        task.subtasks![index].completed = completed;
+        task.completed = task.subtasks?.every(t => t.completed) ?? true;
+      }
+      return {...task};
+    });
+  }
 
 
   constructor(http: HttpClient,
