@@ -1,0 +1,143 @@
+@import "../../../../styles/variables.scss";
+
+/* Layout principal */
+main.centered-layout {
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  height: 100vh; /* Ocupa a tela inteira */
+  background-color: #e8f5f9; /* Fundo sutil próximo à cor da logo */
+}
+
+/* Bloco central */
+.content-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff; /* Fundo branco para contraste */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 40px;
+  max-width: 480px;
+  width: 90%; /* Ajusta em telas menores */
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 20px;
+  text-align: center;
+
+  img.logo {
+    max-width: 150px;
+    height: auto;
+  }
+}
+
+/* Título do formulário */
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #0fb8de; /* Cor da logo */
+}
+
+/* Botões e formulários */
+.btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 14px;
+    color: #9e9e9e;
+    text-transform: uppercase;
+
+    div {
+      flex-grow: 1;
+      height: 2px;
+      background-color: #c1c1c1;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    &.btn-primary {
+      background-color: #0fb8de;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        background-color: #0ca4c7;
+      }
+    }
+
+    &.btn-secondary {
+      border: 1px solid #0fb8de;
+      color: #0fb8de;
+
+      &:hover {
+        background-color: #e8f5f9;
+      }
+    }
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .content-block {
+    padding: 20px;
+
+    .logo-container img.logo {
+      max-width: 200px;
+    }
+
+    .form-title {
+      font-size: 20px;
+    }
+
+    .btn-wrapper button {
+      font-size: 14px;
+      padding: 10px 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .content-block {
+    padding: 15px;
+
+    .logo-container img.logo {
+      max-width: 100px;
+    }
+
+    .form-title {
+      font-size: 18px;
+    }
+
+    .btn-wrapper button {
+      font-size: 12px;
+      padding: 8px 16px;
+    }
+  }
+}

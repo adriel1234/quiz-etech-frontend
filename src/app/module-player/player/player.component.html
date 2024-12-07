@@ -1,0 +1,33 @@
+<div class="quiz-container">
+  <!-- Título da pergunta -->
+  <h2>{{ currentQuestion?.question || 'Carregando pergunta...' }}</h2>
+
+  <!-- Opções de resposta -->
+  <div class="options" *ngIf="currentQuestion?.options?.length; else noOptions">
+    <button
+      *ngFor="let option of currentQuestion.options"
+      (click)="selectOption(option)"
+      [class.selected]="option === selectedOption"
+      [attr.aria-pressed]="option === selectedOption">
+      {{ option }}
+    </button>
+  </div>
+
+  <!-- Feedback para quando não há opções disponíveis -->
+  <ng-template #noOptions>
+    <p class="no-options">Nenhuma opção disponível.</p>
+  </ng-template>
+
+  <!-- Botão para enviar a resposta -->
+  <button
+    (click)="submitAnswer()"
+    [disabled]="!selectedOption">
+    Responder
+  </button>
+
+  <!-- Feedback do usuário -->
+  <div *ngIf="feedback" class="feedback" role="alert">
+    {{ feedback }}
+  </div>
+</div>
+

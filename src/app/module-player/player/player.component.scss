@@ -1,0 +1,27 @@
+.quiz-container {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+.feedback {
+  margin-top: 20px;
+  font-size: 18px;
+}

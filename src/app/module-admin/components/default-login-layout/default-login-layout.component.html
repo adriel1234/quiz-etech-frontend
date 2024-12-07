@@ -1,0 +1,36 @@
+<main class="centered-layout">
+  <section class="content-block">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="/assets/svg/jaraquiz2.png" alt="Logotipo do JaraQuiz" class="logo">
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-container">
+      <h2 class="form-title">{{ title }}</h2>
+      <ng-content></ng-content>
+      <div class="btn-wrapper">
+        <button
+          title="Clique para Login"
+          class="btn-primary"
+          (click)="submit()"
+          [disabled]="disablePrimaryBtn"
+        >
+          {{ primaryBtnText }}
+        </button>
+        <div class="divider">
+          <div></div>
+          <span>ou</span>
+          <div></div>
+        </div>
+        <button
+          class="btn-secondary"
+          title="Clique para Cadastrar"
+          (click)="navigate()"
+        >
+          {{ secondaryBtnText }}
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
