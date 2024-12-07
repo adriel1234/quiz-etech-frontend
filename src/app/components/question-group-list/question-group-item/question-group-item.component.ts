@@ -1,36 +1,25 @@
-import {Component, computed, OnInit, signal} from '@angular/core';
-import {MatError, MatFormField, MatFormFieldModule, MatLabel} from '@angular/material/form-field';
-import {MatInput, MatInputModule} from '@angular/material/input';
-import {MatButton, MatButtonModule} from '@angular/material/button';
+import {Component, OnInit} from '@angular/core';
+import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {MatButton} from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from '../../../shared/services/question.service';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatListOption, MatSelectionList } from '@angular/material/list';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
-import {FlexLayoutModule} from '@ngbracket/ngx-layout';
-import {GroupQuestionService} from '../group-question-service';
+import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {
   Validators,
   FormGroup,
-  NonNullableFormBuilder,
-  UntypedFormArray,
-  FormsModule,
-  ReactiveFormsModule, FormControl
+  ReactiveFormsModule, FormControl, FormArray, FormBuilder
 } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar} from '@angular/material/snack-bar';
 import {QuestionGroup} from '../../../shared/models/question-group.model';
 import {BaseComponent} from '../../base.component';
 import {HttpClient} from '@angular/common/http';
 import {URLS} from '../../../shared/urls';
 import {Question} from '../../../shared/models/question.model';
 import {MatOption, MatSelect} from '@angular/material/select';
-
-export interface Task {
-  name: string;
-  completed: boolean;
-  subtasks?: Task[];
-}
 
 @Component({
   selector: 'app-question-group-item',
@@ -68,81 +57,82 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   public questionGroupId?: number;
 
 
-
-  readonly task = signal<Task>({
-    name: 'Parent task',
-    completed: false,
-    subtasks: [
-      {name: 'Child task 1', completed: false},
-      {name: 'Child task 2', completed: false},
-      {name: 'Child task 3', completed: false},
-    ],
-  });
-
-  readonly partiallyComplete = computed(() => {
-    const task = this.task();
-    if (!task.subtasks) {
-      return false;
-    }
-    return task.subtasks.some(t => t.completed) && !task.subtasks.every(t => t.completed);
-  });
-
-  update(completed: boolean, index?: number) {
-    this.task.update(task => {
-      if (index === undefined) {
-        task.completed = completed;
-        task.subtasks?.forEach(t => (t.completed = completed));
-      } else {
-        task.subtasks![index].completed = completed;
-        task.completed = task.subtasks?.every(t => t.completed) ?? true;
-      }
-      return {...task};
-    });
-  }
-
-  // updateQuestion(correct: boolean, index?: number) {
-  //   if (index === undefined) {
-  //     questions
-  //   }
-  // }
-
-
   constructor(http: HttpClient,
-              private questionService: QuestionService,  // Injeção do QuestionService
+              private questionService: QuestionService,
               private route: ActivatedRoute,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private fb: FormBuilder) {
     super(http, URLS.GROUP); // Certifique-se de que a URL está correta
-    this.formGroup = new FormGroup({
-      description: new FormControl('', [Validators.required]),
-      questions_group_question: new FormControl([], [Validators.required]),
+    this.formGroup = this.fb.group({
+      description: ['', [Validators.required]],
+      questions_group_question: this.fb.array([]), // Inicializando o FormArray
     });
   }
 
   ngOnInit(): void {
     this.questionGroupId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.object.id) {
-      this.formGroup.patchValue({
-        description: this.object.description,
-        questions_group_question: this.object.questions_group_question || [],
-      });
-    }
-
     if (this.questionGroupId) {
-      this.loadQuestionsData(); // Carregar dados do QuestionGroup
+      this.loadQuestionsData(); // Carregar dados do QuestionGroup para edição
     } else {
       this.loadQuestions(); // Carregar perguntas para um novo QuestionGroup
     }
   }
 
+  loadQuestions(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.questionService.getQuestions().subscribe(
+        (data: Question[]) => {
+          this.questions = data;
+          console.log('Perguntas carregadas:', data);
+
+          // Se você está usando Reactive Forms, adicione os FormControl aqui
+          const formArray = this.formGroup.get('questions_group_question') as FormArray;
+          data.forEach(() => formArray.push(new FormControl(false))); // Inicializa com 'false' (desmarcado)
+
+          resolve(); // Resolva a Promise quando as perguntas forem carregadas
+        },
+        (error) => {
+          console.error('Erro ao carregar perguntas', error);
+          this.snackBar.open('Erro ao carregar perguntas', 'Fechar', { duration: 3000 });
+          reject(error); // Rejeita a Promise em caso de erro
+        }
+      );
+    });
+  }
+
   loadQuestionsData(): void {
     this.service.getById(this.questionGroupId!).subscribe(
       (data: QuestionGroup) => {
-        this.object = data;  // Atribuindo o QuestionGroup carregado à variável 'object'
+        console.log('Dados carregados do QuestionGroup:', data); // Verifica os dados da API
+        this.object = data;
+
         this.formGroup.patchValue({
           description: data.description,
-          questions_group_question: data.questions_group_question || [],
         });
-        this.loadQuestions(); // Carregar todas as perguntas, algumas podem já estar selecionadas
+
+        const selectedQuestions = data.questions_group_question || [];
+        console.log('IDs das perguntas selecionadas:', selectedQuestions); // IDs da API
+
+        this.loadQuestions(); // Carregar as perguntas
+
+        // Esperar até que a lista de perguntas esteja carregada para marcar os checkboxes
+        this.loadQuestions().then(() => {
+          const formArray = this.formGroup.get('questions_group_question') as FormArray;
+
+          // Log para ver os valores da lista de perguntas
+          console.log('Lista de Perguntas:', this.questions);
+
+          // Preencher o FormArray com os valores corretos
+          formArray.controls.forEach((control, index) => {
+            if (selectedQuestions.includes(this.questions[index]?.id)) {
+              control.setValue(true); // Marcar o checkbox se o ID estiver na lista
+              console.log(`Checkbox ${index} marcado`);
+            } else {
+              control.setValue(false); // Desmarcar o checkbox
+              console.log(`Checkbox ${index} desmarcado`);
+            }
+          });
+        });
       },
       (error) => {
         console.error('Erro ao carregar QuestionGroup', error);
@@ -152,62 +142,47 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   }
 
 
-  loadQuestions(): void {
-    this.questionService.getQuestions().subscribe(
-      (data: Question[]) => {
-        this.questions = data;
-        console.log(data);  // Atribuindo as perguntas à variável
-      },
-      (error) => {
-        console.error('Erro ao carregar perguntas', error);
-        this.snackBar.open('Erro ao carregar perguntas', 'Fechar', {
-          duration: 3000,
-        });
-      }
-    );
-  }
-
-  public save(): void {
-    if (this.formGroup.valid) {
-      this.validateForm();
-      this.service.save(this.object).subscribe((response) => {
-        this.goToPage('/admin/question-groups');
-      });
-    }
-  }
-
   saveOrUpdate(): void {
     if (this.formGroup.valid) {
-      this.validateForm();  // Valida o formulário antes de enviar
+      this.validateForm();
 
-      // Garantir que o campo `questions_group_question` tenha os IDs das questões selecionadas
-      this.object.questions_group_question = this.formGroup.get('questions_group_question')?.value;
+      // Obtendo os valores dos checkboxes
+      const selectedQuestions = this.formGroup.get('questions_group_question')?.value;
 
+      // Filtrando as perguntas selecionadas (valores 'true' nos checkboxes)
+      this.object.questions_group_question = this.questions
+        .filter((_, index) => selectedQuestions[index])  // Filtrando os selecionados
+        .map(question => question.id);  // Mapeando para os IDs das perguntas
+
+      // Enviando para a API
       if (this.object.id) {
-        this.service.update(this.object.id!, this.object).subscribe(
-          (response) => {
+        // Atualizando o grupo de perguntas
+        this.service.update(this.object.id!, this.object).subscribe({
+          next: () => {
             this.snackBar.open('Grupo de perguntas atualizado com sucesso', 'Fechar', { duration: 3000 });
             this.goToPage('admin/question-groups');
           },
-          (error) => {
+          error: (error) => {
             console.error('Erro ao atualizar o grupo de perguntas', error);
             this.snackBar.open('Erro ao atualizar o grupo de perguntas', 'Fechar', { duration: 3000 });
           }
-        );
+        });
       } else {
-        this.service.save(this.object).subscribe(
-          (response) => {
+        // Salvando um novo grupo de perguntas
+        this.service.save(this.object).subscribe({
+          next: () => {
             this.snackBar.open('Grupo de perguntas salvo com sucesso', 'Fechar', { duration: 3000 });
             this.goToPage('admin/question-groups');
           },
-          (error) => {
+          error: (error) => {
             console.error('Erro ao salvar o grupo de perguntas', error);
             this.snackBar.open('Erro ao salvar o grupo de perguntas', 'Fechar', { duration: 3000 });
           }
-        );
+        });
       }
     }
   }
+
 
   private validateForm(): void {
     Object.keys(this.formGroup.getRawValue()).forEach((key) => {
