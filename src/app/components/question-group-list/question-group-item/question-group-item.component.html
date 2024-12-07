@@ -1,4 +1,4 @@
-<div class="flex flex-column gap-1">
+<div class="flex flex-column gap-1" *ngIf="isFormVisible">
   <h1>Cadastro de Grupo de Perguntas</h1>
 
   <form [formGroup]="formGroup">
@@ -22,8 +22,6 @@
           Selecione ao menos uma questão.
         </mat-error>
       </div>
-
-
     </div>
 
     <!-- Botão de Envio -->

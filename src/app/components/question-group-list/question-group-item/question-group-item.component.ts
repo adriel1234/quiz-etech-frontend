@@ -56,6 +56,7 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   public formGroup: FormGroup;
   public questions: Question[] = [];
   public questionGroupId?: number;
+  public isFormVisible: boolean = true;
 
 
   constructor(http: HttpClient,
@@ -71,76 +72,80 @@ export class QuestionGroupItemComponent extends BaseComponent<QuestionGroup> imp
   }
 
   ngOnInit(): void {
-    this.questionGroupId = Number(this.route.snapshot.paramMap.get('id'));
-    if (this.questionGroupId) {
-      this.loadQuestionGroup(); // Carregar dados do QuestionGroup
+    const action: string | null = this.route.snapshot.paramMap.get('action');
+    const id: string | null = this.route.snapshot.paramMap.get('id');
+
+    // novo formulario
+    if (action === 'create') {
+      this.loadQuestions();  // Carregar perguntas para o formulário novo
+      // verirfica se action é edit e se id é um numero
+    } else if (action === 'edit' && id && !isNaN(Number(id))) {
+      this.questionGroupId = Number(id);
+      this.loadQuestionGroup();  // Carregar dados do QuestionGroup para edição
     } else {
-      this.loadQuestions(); // Carregar perguntas para um novo QuestionGroup
+      this.isFormVisible = false;  // Não exibir o formulário
+      console.log('Ação inválida ou ID inválido');
     }
   }
 
-  loadQuestions(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.questionService.getQuestions().subscribe(
-        (data: Question[]) => {
-          this.questions = data;
+  async loadQuestions(): Promise<void> {
+    try {
+      // Usando firstValueFrom para obter os dados do Observable
+      const data: Question[] = await firstValueFrom(this.questionService.getQuestions());
 
-          const formArray = this.formGroup.get('questions_group_question') as FormArray;
-          // Adicionando FormControl para cada pergunta com valor inicial 'false'
-          data.forEach(() => formArray.push(new FormControl(false)));
+      this.questions = data;
+      const formArray = this.formGroup.get('questions_group_question') as FormArray;
 
-          // Resolver a Promise após carregar as perguntas
-          resolve();
-        },
-        (error) => {
-          console.error('Erro ao carregar perguntas', error);
-          this.snackBar.open('Erro ao carregar perguntas', 'Fechar', { duration: 3000 });
+      // Adicionando FormControl para cada pergunta com valor inicial 'false'
+      data.forEach(() => formArray.push(new FormControl(false)));
 
-          // Rejeitar a Promise em caso de erro
-          reject(error);
-        }
-      );
-    });
+      // A Promise será resolvida quando os dados forem carregados
+    } catch (error) {
+      console.error('Erro ao carregar perguntas', error);
+      this.snackBar.open('Erro ao carregar perguntas', 'Fechar', { duration: 3000 });
+
+      // Rejeitando a Promise em caso de erro
+      throw error;
+    }
   }
 
   // metodo para carregas as perguntas  selecionadas pegando da API pelo ID
+
   async loadQuestionGroup(): Promise<void> {
     try {
-      //  Obtém o primeiro valor emitido pelo Observable
-      const data: QuestionGroup | undefined = await firstValueFrom(this.service.getById(this.questionGroupId!)); // Obtém os dados do QuestionGroup // Obtém os dados do QuestionGroup
+      const data: QuestionGroup | undefined = await this.service.getById(this.questionGroupId!).toPromise();
+
+      // Se a resposta for undefined ou não encontrada (status 404), exibe a mensagem e oculta o formulário
       if (!data) {
-        // Se não houver dados, exibe um erro ou retorna
-        console.error('Dados do QuestionGroup não encontrados');
-        this.snackBar.open('Dados do grupo de perguntas não encontrados', 'Fechar', { duration: 3000 });
-        return; // Finaliza a execução da função caso 'data' seja undefined
+        this.snackBar.open('Grupo de perguntas não encontrado!', 'Fechar', { duration: 3000 });
+        this.isFormVisible = false; // Esconde o formulário
+        return;
       }
 
       this.object = data;
-
       this.formGroup.patchValue({
         description: data.description,
       });
 
       const selectedQuestions = data.questions_group_question || [];
+      await this.loadQuestions(); // Carregar as perguntas
 
-      await this.loadQuestions(); // Carregar as perguntas, aguardando a conclusão
-
-      // Aguardar até que as perguntas estejam carregadas antes de marcar os checkboxes
       const formArray = this.formGroup.get('questions_group_question') as FormArray;
-
-
-      // Preencher o FormArray com os valores corretos
       formArray.controls.forEach((control, index) => {
         if (selectedQuestions.includes(this.questions[index]?.id)) {
-          control.setValue(true); // Marcar o checkbox se o ID estiver na lista
+          control.setValue(true);
         } else {
-          control.setValue(false); // Desmarcar o checkbox
+          control.setValue(false);
         }
       });
     } catch (error) {
+      // Tratamento de erro adicional para garantir que qualquer erro de requisição também ocultará o formulário
+      console.error('Erro ao carregar QuestionGroup', error);
       this.snackBar.open('Erro ao carregar o grupo de perguntas', 'Fechar', { duration: 3000 });
+      this.isFormVisible = false; // Esconde o formulário em caso de erro
     }
   }
+
 
   saveOrUpdate(): void {
     if (this.formGroup.valid) {
