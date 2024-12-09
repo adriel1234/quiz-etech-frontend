@@ -1,140 +1,114 @@
-/* Container principal */
-.form-container {
+/* Ajuste geral do layout para garantir que o conteúdo ocupe o espaço disponível */
+.flex {
   display: flex;
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  min-height: 100vh; /* Garante que o conteúdo ocupe a tela toda */
+  padding: 20px; /* Adiciona um espaçamento interno */
+  box-sizing: border-box; /* Garantir que o padding não afete o layout */
+}
+
+.flex-column {
   flex-direction: column;
-  gap: 20px;
   width: 100%;
-  max-width: 1600px;  /* Aumenta a largura máxima do container */
-  margin: auto;
-  padding: 20px;  /* Aumenta o padding para maior espaçamento nas bordas */
+  max-width: 900px; /* Limita a largura máxima do formulário */
+  background-color: #fff; /* Fundo branco para destacar o conteúdo */
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar o conteúdo */
+  padding: 20px;
+  transition: all 0.3s ease; /* Adiciona suavidade nas transições */
 }
 
-/* Estilo da lista de perguntas */
-.questions-list {
-  margin-top: 10px;
-  max-height: 350px;  /* Aumenta a altura máxima para dispositivos móveis */
-  overflow-y: auto;  /* Permite a rolagem quando necessário */
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 12px;
-  width: 95%;  /* Garantir que a lista ocupe toda a largura disponível */
+.gap-1 {
+  gap: 8px;
 }
 
-.mat-selection-list {
-  width: 100%;  /* Garante que a lista de seleção ocupe toda a largura */
+.gap-3 {
+  gap: 16px;
 }
 
-/* Botões de ação */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.mat-card {
-  padding: 25px;  /* Aumenta o padding do card */
-  width: 100%;  /* Garante que o card ocupe toda a largura disponível */
-}
-
-.mat-card-header {
-  background-color: #f5f5f5;
-}
-
-.card-title {
-  font-size: 18px;  /* Aumenta o tamanho do título */
-  font-weight: normal;
+/* Estilo dos títulos */
+h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
 }
 
-/* Adicionando o estilo customizado para a largura do mat-card */
-.custom-card {
-  width: 80%;
+/* Certifique-se de que os campos de entrada e o botão sejam responsivos */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px; /* Espaçamento entre os campos */
 }
 
-@media (max-width: 600px) {
-  .custom-card {
-    width: 100%;
-  }
+/* Estilo do botão */
+button {
+  width: 100%;
+  max-width: 250px;
+  padding: 12px;
+  background-color: #007BFF; /* Azul vibrante */
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave no botão */
 }
 
-@media (min-width: 1200px) {
-  .custom-card {
-    width: 70%;
-  }
+button:hover {
+  background-color: #69a8fc; /* Muda a cor ao passar o mouse */
 }
 
-/* Ajustes de responsividade para telas pequenas (celulares) */
-@media (max-width: 600px) {
-  .form-container {
-    padding: 15px;  /* Reduz o padding nas telas menores */
+button:disabled {
+  background-color: #ccc; /* Cor do botão desabilitado */
+  cursor: not-allowed; /* Cursor de bloqueio */
+}
+
+/* Estilo dos campos de erro */
+mat-error {
+  color: #d9534f; /* Vermelho para erros */
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .flex-column {
+    padding: 15px; /* Menos padding em telas pequenas */
+    align-items: center; /* Centraliza o conteúdo em telas menores */
   }
 
-  .mat-card {
-    padding: 18px;  /* Ajusta o padding do card */
+  h1 {
+    font-size: 1.5rem;
   }
 
-  .questions-list {
-    max-height: 300px;  /* Ajusta a altura máxima da lista para caber melhor em telas pequenas */
+  .mat-form-field {
+    margin-bottom: 12px;
   }
 
-  .card-title {
-    font-size: 16px;  /* Ajusta o tamanho do título para telas pequenas */
+  .mat-paginator {
+    width: 100%; /* Garante que o paginator ocupe 100% da largura disponível */
   }
 
-  .actions {
-    flex-direction: column;  /* Alinha os botões verticalmente em telas menores */
-    gap: 5px;  /* Diminui o espaço entre os botões */
+  mat-checkbox {
+    width: 100%; /* Faz com que os checkboxes ocupem 100% da largura em telas pequenas */
   }
 
   button {
-    width: 100%;  /* Faz os botões ocuparem toda a largura disponível */
+    width: 100%;
+    max-width: none;
+    padding: 14px;
+    font-size: 1.1rem;
   }
 }
 
-/* Adicionando responsividade para telas médias (tablets) */
-@media (max-width: 1024px) {
-  .form-container {
-    padding: 18px;  /* Ajusta o padding para telas médias */
+/* Para telas muito grandes, você pode definir um limite de largura */
+@media (min-width: 1200px) {
+  .flex-column {
+    max-width: 800px;
+    margin: 0 auto; /* Centraliza o conteúdo */
   }
-
-  .mat-card {
-    padding: 22px;  /* Ajusta o padding no card */
-  }
-
-  .card-title {
-    font-size: 17px;  /* Ajusta o tamanho do título para telas médias */
-  }
-}
-
-/* Adicionando responsividade para telas grandes (desktop) */
-@media (min-width: 1025px) {
-  .form-container {
-    max-width: 1600px;  /* Aumenta a largura máxima para telas grandes */
-    padding: 30px;  /* Aumenta o padding */
-  }
-
-  .mat-card {
-    padding: 30px;  /* Aumenta o padding no card */
-  }
-
-  .card-title {
-    font-size: 20px;  /* Aumenta o tamanho do título para telas grandes */
-  }
-}
-
-h2{
-  font-size:20px;
-}
-
-.example-section {
-  margin: 12px 0;
-}
-
-.example-margin {
-  margin: 0 12px;
-}
-
-ul {
-  list-style-type: none;
-  margin-top: 4px;
 }
