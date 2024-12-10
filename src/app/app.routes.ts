@@ -65,7 +65,7 @@ export const routes: Routes = [
         data: { title: 'Cadastrar Quizz' },
       },
       {
-        path: 'question-groups/edit/:id',
+        path: 'question-groups/:action/:id',
         component: QuestionGroupItemComponent,
         data: { title: 'Editar Quizz' },
       }
