@@ -7,8 +7,8 @@ mat-checkbox {
   align-items: center;  // Garante o alinhamento vertical correto
 }
 
-.form-title{
-  margin-top: -50px;
+.h1-form-title{
+  margin-top: -60px;
 }
 
 
@@ -25,7 +25,7 @@ mat-checkbox {
 .flex-column {
   flex-direction: column;
   width: 100%;
-  max-width: 900px; /* Limita a largura máxima do formulário */
+  max-width: 1350px; /* Limita a largura máxima do formulário */
   background-color: #fff; /* Fundo branco para destacar o conteúdo */
   border-radius: 10px; /* Bordas arredondadas */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar o conteúdo */
