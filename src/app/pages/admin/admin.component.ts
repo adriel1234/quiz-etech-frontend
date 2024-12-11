@@ -39,6 +39,7 @@ export class AdminComponent implements OnInit {
   public menuList: Menu[] = [
     { title: 'QUIZZ', route: 'question-groups', isCurrent: false },
     { title: 'PERGUNTAS', route: 'question', isCurrent: false },
+    { title: 'MATCH', route: 'match', isCurrent: false },
   ];
 
   constructor(private router: Router, private route: ActivatedRoute) {}

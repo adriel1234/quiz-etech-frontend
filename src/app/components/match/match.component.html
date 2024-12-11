@@ -1,0 +1,60 @@
+<div class="flex flex-column gap-1">
+  <h1>MATCH</h1>
+
+  <div class="flex gap-3">
+
+    <mat-form-field>
+      <mat-label>Filtrar DESCRIÇÃO</mat-label>
+      <input matInput [(ngModel)]="searchDescription">
+    </mat-form-field>
+
+    <button mat-fab (click)="search()" class="btn-default">
+      <mat-icon class="custom-icon">search</mat-icon>
+    </button>
+    <button mat-fab (click)="goToPage('admin/match/create')" class="btn-default">
+      <mat-icon class="custom-icon">add</mat-icon>
+    </button>
+  </div>
+
+
+  <mat-card class="shadow-6">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Cod.</th>
+        <td mat-cell *matCellDef="let element"> {{ element.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Descrição</th>
+        <td mat-cell *matCellDef="let element"> {{ element.description }}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="w-10rem"></th>
+        <td mat-cell *matCellDef="let element" class="w-10rem">
+
+          <button mat-icon-button aria-label="edit" (click)="goToPage('admin/match/edit/'+element.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="delete" (click)="deleteObject(element.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+
+    @if (dataSource.length === 0) {
+      <div class="flex flex-center align-items-center justify-content-center">
+        <h3>Nenhuma Questão encontrada</h3>
+      </div>
+    }
+
+  </mat-card>
+
+</div>
