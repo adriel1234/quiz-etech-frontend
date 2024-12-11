@@ -1,0 +1,24 @@
+<div class="container">
+  <h1 class="text-center">Ranking do Match #{{ matchId }}</h1>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Posição</th>
+      <th>Usuário</th>
+      <th>Pontos</th>
+      <th>Perguntas Corretas</th>
+      <th>Perguntas Erradas</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of rankingList; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.points }}</td>
+      <td>{{ user.right_questions }}</td>
+      <td>{{ user.wrong_questions }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
