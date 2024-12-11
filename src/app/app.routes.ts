@@ -12,6 +12,7 @@ import {
 } from './components/question-group-list/question-group-item/question-group-item.component';
 import {GroupQuestionListComponent} from './components/question-group-list/group-question-list.component';
 import {AdminComponent} from './pages/admin/admin.component';
+import {MatchComponent} from './components/match/match.component';
 
 export const routes: Routes = [
   {
@@ -68,7 +69,13 @@ export const routes: Routes = [
         path: 'question-groups/:action/:id',
         component: QuestionGroupItemComponent,
         data: { title: 'Editar Quizz' },
+      },
+      {
+        path: 'match',
+        component: MatchComponent,
+        data: { title: 'Match Quizz' },
       }
+
     ]
   }
 ];
