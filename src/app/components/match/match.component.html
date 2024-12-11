@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>{{ match.id ? 'Editar Partida' : 'Criar Partida' }}</h1>
+  <form [formGroup]="formGroup" (ngSubmit)="saveOrUpdate()">
+    <!-- Campo de Tempo por Questão -->
+    <mat-form-field>
+      <mat-label>Tempo por Questão (segundos)</mat-label>
+      <input matInput type="number" formControlName="timePerQuestion" required>
+      <mat-error *ngIf="formGroup.get('timePerQuestion')?.hasError('required')">
+        Campo obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Campo de Descrição -->
+    <mat-form-field>
+      <mat-label>Descrição</mat-label>
+      <input matInput type="text" formControlName="description" required>
+      <mat-error *ngIf="formGroup.get('description')?.hasError('required')">
+        Campo obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Seleção de Grupo de Perguntas -->
+    <mat-form-field>
+      <mat-label>Grupo de Perguntas</mat-label>
+      <mat-select formControlName="questionGroup" required>
+        <mat-option *ngFor="let group of questionGroups" [value]="group.id">
+          {{ group.description }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('questionGroup')?.hasError('required')">
+        Campo obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Botões -->
+    <button mat-flat-button color="primary" type="submit" [disabled]="!formGroup.valid">
+      {{ match.id ? 'Atualizar' : 'Salvar' }}
+    </button>
+    <button mat-flat-button color="warn" type="button" (click)="cancel()">Cancelar</button>
+  </form>
+</div>
