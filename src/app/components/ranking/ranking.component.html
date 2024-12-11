@@ -1,28 +1,31 @@
-<div class="container">
+<div class="ranking-container">
   <h1 class="text-center">Ranking do Match #{{ matchId }}</h1>
 
-  <table class="table table-striped">
+  <table class="ranking-table">
     <thead>
     <tr>
       <th>Posição</th>
       <th>Usuário</th>
       <th>Pontos</th>
-      <th>Perguntas Corretas</th>
-      <th>Perguntas Erradas</th>
+      <th>Corretas</th>
+      <th>Erradas</th>
     </tr>
     </thead>
     <tbody>
-
       @for (user of rankingList; track user) {
         <tr>
-          <td>{{ $index + 1 }}</td>
+          <td class="ranking">{{ $index + 1 }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.points }}</td>
           <td>{{ user.right_questions }}</td>
           <td>{{ user.wrong_questions }}</td>
         </tr>
       }
-
     </tbody>
   </table>
 </div>
+
+<ng-template #noData>
+  <p class="no-data">Nenhum dado disponível para este match.</p>
+</ng-template>
+
