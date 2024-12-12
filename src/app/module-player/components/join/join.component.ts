@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import {TestService} from '../../../services/test.service';
 import {QuizResult} from '../../../shared/models/quiz-result';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-join',
@@ -13,6 +14,7 @@ import {QuizResult} from '../../../shared/models/quiz-result';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    FormsModule,
   ],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'], // Corrigido: "styleUrl" para "styleUrls" e array
@@ -25,6 +27,7 @@ export class JoinComponent {
 
   join() {
     // Verifica se o nome e o código estão preenchidos
+    console.log(this.name);
     if (!this.name || !this.code) {
       alert('Por favor, insira seu nome e o código do quiz.'); // Feedback para o usuário
       return;
@@ -33,6 +36,7 @@ export class JoinComponent {
     // Busca o quiz pelo código
     this.testService.getQuizByCode(this.code).subscribe(
       (result) => {
+        console.log("quiz",result);
         if (result.length === 0) {
           alert('Código do quiz inválido.'); // Caso o código seja inválido
           return;
@@ -44,6 +48,8 @@ export class JoinComponent {
           quizId: quiz.id, // O `quiz.id` já é tratado como string ou deve ser convertido para garantir
           response: [],
         };
+
+        console.log(quizResult)
 
         // Realiza o "join" no quiz
         this.testService.joinQuiz(quizResult).subscribe(

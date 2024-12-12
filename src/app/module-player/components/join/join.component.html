@@ -3,11 +3,11 @@
     <h4>Porfavor, coloque o seu nome e codigo da sala</h4>
         <mat-form-field class="w-full">
           <mat-label>NOME</mat-label>
-          <input type="text" matInput placeholder="enter name"/>
+          <input type="text" matInput [(ngModel)]="name" placeholder="enter name"/>
         </mat-form-field>
         <mat-form-field class="w-full">
           <mat-label>SALA</mat-label>
-          <input type="text" matInput placeholder="enter code"/>
+          <input type="text" matInput [(ngModel)]="code"  placeholder="enter code"/>
         </mat-form-field>
     <button mat-raised-button color="primary" class="w-6/12" (click)="join()" >OK</button>
   </div>
