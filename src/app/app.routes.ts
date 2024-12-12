@@ -28,7 +28,7 @@ export const routes: Routes = [
   },
   {
     path: 'player',
-    component: PlayerComponent,
+    // component: JoinComponent,
     canActivate: [AuthGuard],
     children: [
       {

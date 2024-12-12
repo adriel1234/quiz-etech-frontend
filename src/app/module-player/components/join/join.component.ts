@@ -3,8 +3,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { TestService } from '../../../shared/services/test.service';
-import { QuizResult } from '../../../shared/models/quiz-result.model';
+import {TestService} from '../../../services/test.service';
+import {QuizResult} from '../../../shared/models/quiz-result';
 
 @Component({
   selector: 'app-join',
