@@ -28,8 +28,6 @@ export const routes: Routes = [
   },
   {
     path: 'player',
-    // component: JoinComponent,
-    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -47,7 +45,7 @@ export const routes: Routes = [
         data: { title: 'Sala de Espera' },
       },
       {
-        path: 'match',
+        path: 'quiz/:id',
         component: MatchComponent,
         data: { title: 'Respostas' },
       },

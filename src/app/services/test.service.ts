@@ -3,6 +3,7 @@ import {QuizResult} from '../shared/models/quiz-result';
 import {HttpClient} from '@angular/common/http';
 import {Question} from '../shared/models/question.model';
 import {Match} from '../shared/models/match.model';
+import {MatchUser} from '../shared/models/match-user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,26 @@ export class TestService {
   getQuestions(){
     return this.http.get<Question[]>("http://localhost:8000/api/questions");
   }
-  getQuizByCode(code: string){
-    return this.http.get<Question[]>("http://localhost:8000/api/quiz/" + code);
+  getQuizByCode(code: string) {
+    return this.http.get<Match>("http://localhost:8000/api/quiz/" + code);
   }
-  joinQuiz(quizResult:QuizResult){
-    return this.http.post<QuizResult[]>("http://localhost:8000/api/quizResults", quizResult);
+
+  getQuizWithMatchUser(quizId: number, matchUserId?: string) {
+    return this.http.get<{ quiz: any; matchUser: any }>(`http://localhost:8000/api/quiz/${quizId}/?matchUserId=${matchUserId}`);
+  }
+
+
+  registerMatchUser(matchUser: {
+    wrongQuestions: number;
+    rightQuestions: number;
+    match: Match;
+    userId: number;
+    points: number
+  }) {
+    return this.http.post<MatchUser>("http://localhost:8000/api/match-users", matchUser);
+  }
+  joinQuiz(quizResult: QuizResult) {
+    return this.http.post<QuizResult>("http://localhost:8000/api/quizResults", quizResult);
   }
   getQuizById(quizId: string){
     return this.http.get<Match>("http://localhost:8000/api/quiz/" + quizId);

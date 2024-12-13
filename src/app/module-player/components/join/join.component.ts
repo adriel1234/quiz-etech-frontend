@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import {TestService} from '../../../services/test.service';
 import {QuizResult} from '../../../shared/models/quiz-result';
 import {FormsModule} from '@angular/forms';
+import {MatchUser} from '../../../shared/models/match-user.model';
+import {Match} from '../../../shared/models/match.model';
 
 @Component({
   selector: 'app-join',
@@ -26,39 +28,44 @@ export class JoinComponent {
   router = inject(Router);
 
   join() {
-    // Verifica se o nome e o código estão preenchidos
-    console.log(this.name);
     if (!this.name || !this.code) {
-      alert('Por favor, insira seu nome e o código do quiz.'); // Feedback para o usuário
+      alert('Por favor, insira seu nome e o código do quiz.');
       return;
     }
 
-    // Busca o quiz pelo código
     this.testService.getQuizByCode(this.code).subscribe(
-      (result) => {
-        console.log("quiz",result);
-        if (result.length === 0) {
-          alert('Código do quiz inválido.'); // Caso o código seja inválido
+      (match) => {
+        if (!match || !match.id) {
+          alert('Código do quiz inválido.');
           return;
         }
 
-        const quiz = result[0];
-        const quizResult: QuizResult = {
-          name: this.name,
-          quizId: quiz.id, // O `quiz.id` já é tratado como string ou deve ser convertido para garantir
-          response: [],
+        // Get a valid userId (replace with your actual logic for fetching the user ID)
+        const userId = 1;  // Implement this function to get the logged-in user ID
+
+        const matchUser: {
+          wrongQuestions: number;
+          rightQuestions: number;
+          match: Match;
+          userId: number;  // Use a valid userId here
+          points: number;
+        } = {
+          userId: userId,
+          match: match,
+          points: 0,
+          rightQuestions: 0,
+          wrongQuestions: 0,
         };
 
-        console.log(quizResult)
-
-        // Realiza o "join" no quiz
-        this.testService.joinQuiz(quizResult).subscribe(
+        this.testService.registerMatchUser(matchUser).subscribe(
           () => {
-            this.router.navigateByUrl('/quiz-info');
+            alert('Usuário cadastrado no quiz com sucesso!');
+            this.router.navigate(['/player/quiz/', match.id]); // Redirecionar para perguntas
+            console.log('Navigating to:', '/player/quiz/', match.id);
           },
           (error) => {
-            console.error('Erro ao entrar no quiz:', error);
-            alert('Não foi possível entrar no quiz. Tente novamente.');
+            console.error('Erro ao cadastrar o usuário no quiz:', error);
+            alert('Não foi possível cadastrar o usuário no quiz. Tente novamente.');
           }
         );
       },
@@ -68,4 +75,5 @@ export class JoinComponent {
       }
     );
   }
+
 }
