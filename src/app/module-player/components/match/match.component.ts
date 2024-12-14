@@ -10,7 +10,7 @@ import {Match} from '../../../shared/models/match.model';
 import {QuizResult} from '../../../shared/models/quiz-result';
 import {QuizService} from './quiz.service';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {QuestionService} from '../../../shared/services/question.service';
 
 
@@ -25,47 +25,58 @@ import {QuestionService} from '../../../shared/services/question.service';
     MatRadioModule,
     FormsModule,
     NgForOf,
+    NgIf,
   ],
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.scss'] // Corrigido: estilo é um array
 })
 export class MatchComponent implements OnInit {
   quizData: any;
-  match: number=0;
-  public questions: Question[] = [];
-  currentQuestionIndex = 0;
-  currentQuestion: Question | undefined; // Define type as Question (assuming interface)
-  selectedOptions: { [key: number]: number } = {};
+  match: number = 0;
+  questions: any[] = [];
+  currentQuestionIndex = 0; // Começa pela primeira pergunta
+  currentQuestion: any; // Altera o tipo para lidar com o dado retornado
+  selectedOptions: { [key: number]: number } = {}; // Respostas do usuário
 
-  constructor(private quizService: QuizService,private questionService: QuestionService,private route: ActivatedRoute) {}
+  constructor(
+    private quizService: QuizService,
+    private questionService: QuestionService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.match = Number(this.route.snapshot.paramMap.get('id'));
-    this.quizService.getQuizData(4).subscribe(quiz => {
+
+    // Busca os dados do quiz
+    this.quizService.getQuizData(this.match).subscribe((quiz) => {
       this.quizData = quiz;
 
-      const questionGroupIds = this.quizData.questions_group_question;
+      // Supondo que `question_group` esteja associado ao quiz
+      const questionGroupId = this.quizData.question_group;
 
-      questionGroupIds.forEach((questionId: number) => {
-        this.questionService.getById(questionId).subscribe(question => {
-          // Process the fetched question
-          console.log(question);
+      // Busca todas as questões pelo grupo
+      this.quizService.getQuestionsByGroup(questionGroupId).subscribe((questions) => {
+        this.questions = questions;
+        console.log('Questions fetched:', this.questions);
 
-          // Add the question to a list of questions, if needed
-          this.questions.push(question);
-        });
+        // Define a primeira questão como a atual
+        if (this.questions.length > 0) {
+          this.currentQuestion = this.questions[this.currentQuestionIndex];
+        } else {
+          console.warn('Nenhuma questão encontrada.');
+        }
       });
     });
   }
 
-  // Função para navegar para a próxima questão
-  nextQuestion() {
-    if (this.currentQuestionIndex < this.quizData.questions.length - 1) {
+  // Método para avançar para a próxima questão
+  nextQuestion(): void {
+    if (this.currentQuestionIndex < this.questions.length - 1) {
       this.currentQuestionIndex++;
-    } else {
-      alert('Você terminou o quiz!');
+      this.currentQuestion = this.questions[this.currentQuestionIndex];
     }
   }
+
 
   // Função para navegar para a questão anterior
   previousQuestion() {

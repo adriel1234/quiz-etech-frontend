@@ -41,6 +41,9 @@ export class QuizService {
   getQuestionGroup(questionGroupId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}question-group/${questionGroupId}/`); // Obtemos os dados do question_group
   }
+  getQuestionsByGroup(groupId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}question/?group_id=${groupId}`);
+  }
 
   // Método para pegar as perguntas específicas com base em seus IDs
   // getQuestions(questionIds: number[]): Observable<any[]> {

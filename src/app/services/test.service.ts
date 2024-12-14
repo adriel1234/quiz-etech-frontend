@@ -36,7 +36,8 @@ export class TestService {
   joinQuiz(quizResult: QuizResult) {
     return this.http.post<QuizResult>("http://localhost:8000/api/quizResults", quizResult);
   }
-  getQuizById(quizId: string){
+
+  getQuizById(quizId: number){
     return this.http.get<Match>("http://localhost:8000/api/quiz/" + quizId);
   }
   upDateQuizResult(id:number, result:QuizResult){

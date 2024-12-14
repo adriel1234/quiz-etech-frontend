@@ -36,9 +36,9 @@ export class InfoComponent {
       return;
     }
     let quizId = this.quizResult.quizId;
-    // this.testService.getQuizById(quizId).subscribe((quiz) => {
-    //   this.quizInfo=quiz;
-    // })
+    this.testService.getQuizById(quizId).subscribe((quiz) => {
+      this.quizInfo=quiz;
+    })
   }
   start(){
     this.router.navigateByUrl('/match');

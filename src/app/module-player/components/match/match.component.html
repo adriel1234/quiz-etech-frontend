@@ -1,34 +1,38 @@
-<div class="quiz-container">
+<div class="quiz-container" *ngIf="quizData && questions.length > 0">
   <h1>{{ quizData.description }}</h1>
 
   <div class="question-container">
-    <h3>{{ quizData.questions[currentQuestionIndex].description }}</h3>
+    <h3>{{ currentQuestion?.description }}</h3>
 
-
-
-    <div class="options">
-      @for(option of currentQuestion?.options;track option){
-        <mat-radio-group [(ngModel)]="selectedOptions[quizData.questions[currentQuestionIndex].id]"
-                         (change)="onOptionSelected(quizData.questions[currentQuestionIndex].id, option.id)">
-          <mat-radio-button [id]="'question_' + quizData.questions[currentQuestionIndex].id + '_option_' + option.id"
-                            [value]="option.id">
-            {{ option.description }}
-          </mat-radio-button>
-        </mat-radio-group>
-
-      }
-
+    <div class="options" *ngIf="currentQuestion?.options">
+      <mat-radio-group
+        [(ngModel)]="selectedOptions[currentQuestion.id]"
+        (change)="onOptionSelected(currentQuestion.id, $event.value)"
+      >
+        <mat-radio-button
+          *ngFor="let option of currentQuestion.options; let i = index"[value]="i">
+          {{ option.description }}
+        </mat-radio-button>
+      </mat-radio-group>
     </div>
-
   </div>
 
   <div class="navigation-buttons">
-    <!-- Usando MatButton do Angular Material -->
-    <button mat-raised-button color="primary" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="previousQuestion()"
+      [disabled]="currentQuestionIndex === 0"
+    >
       Anterior
     </button>
-    <button mat-raised-button color="primary" (click)="nextQuestion()">
-      {{ currentQuestionIndex === quizData.questions.length - 1 ? 'Finalizar' : 'Próxima' }}
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="nextQuestion()"
+      [disabled]="currentQuestionIndex === questions.length"
+    >
+      {{ currentQuestionIndex === questions.length - 1 ? 'Finalizar' : 'Próxima' }}
     </button>
   </div>
 </div>
