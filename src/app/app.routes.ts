@@ -45,7 +45,7 @@ export const routes: Routes = [
         data: { title: 'Sala de Espera' },
       },
       {
-        path: 'quiz/:id',
+        path: 'quiz',
         component: MatchComponent,
         data: { title: 'Respostas' },
       },

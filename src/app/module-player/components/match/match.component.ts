@@ -4,14 +4,14 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {ActivatedRoute, Router} from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
-import { Question } from '../../../shared/models/question.model';
+
 import {TestService} from '../../../services/test.service';
-import {Match} from '../../../shared/models/match.model';
-import {QuizResult} from '../../../shared/models/quiz-result';
+
 import {QuizService} from './quiz.service';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {QuestionService} from '../../../shared/services/question.service';
+import {MatchUser} from '../../../shared/models/match-user.model';
 
 
 @Component({
@@ -31,6 +31,9 @@ import {QuestionService} from '../../../shared/services/question.service';
   styleUrls: ['./match.component.scss'] // Corrigido: estilo é um array
 })
 export class MatchComponent implements OnInit {
+  testService = inject(TestService);
+  router = inject(Router);
+  quizInfo?: MatchUser;
   quizData: any;
   match: number = 0;
   questions: any[] = [];
@@ -45,18 +48,21 @@ export class MatchComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.match = Number(this.route.snapshot.paramMap.get('id'));
+    console.log("match");
 
-    // Busca os dados do quiz
-    this.quizService.getQuizData(this.match).subscribe((quiz) => {
-      this.quizData = quiz;
+    // Acessando os detalhes do match
+    this.quizData = this.testService.matchDetails;
 
-      // Supondo que `question_group` esteja associado ao quiz
-      const questionGroupId = this.quizData.question_group;
+    // Acessando o valor de 'question_group' diretamente
+    const questionGroupId = this.testService.matchDetails.question_group;
+
+    console.log(this.quizData);        // Exibe todos os dados do match
+    console.log(questionGroupId);      // Exibe o valor de 'question_group'
 
       // Busca todas as questões pelo grupo
       this.quizService.getQuestionsByGroup(questionGroupId).subscribe((questions) => {
         this.questions = questions;
+        console.log("tamanho questions",questions.length)
         console.log('Questions fetched:', this.questions);
 
         // Define a primeira questão como a atual
@@ -66,7 +72,6 @@ export class MatchComponent implements OnInit {
           console.warn('Nenhuma questão encontrada.');
         }
       });
-    });
   }
 
   // Método para avançar para a próxima questão
@@ -88,5 +93,14 @@ export class MatchComponent implements OnInit {
   // Função para registrar a opção selecionada
   onOptionSelected(questionId: number, optionId: number) {
     this.selectedOptions[questionId] = optionId;
+  }
+  submit(){
+
+    this.router.navigateByUrl("player/score")
+
+  }
+  calculateResult(){
+
+
   }
 }

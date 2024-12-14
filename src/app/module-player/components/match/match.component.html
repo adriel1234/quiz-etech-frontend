@@ -1,8 +1,8 @@
 <div class="quiz-container" *ngIf="quizData && questions.length > 0">
-  <h1>{{ quizData.description }}</h1>
+  <h1>{{ quizData?.description }}</h1> <!-- Exibindo a descrição do match -->
 
   <div class="question-container">
-    <h3>{{ currentQuestion?.description }}</h3>
+    <h3>{{ currentQuestion?.description }}</h3> <!-- Exibindo a descrição da pergunta -->
 
     <div class="options" *ngIf="currentQuestion?.options">
       <mat-radio-group
@@ -10,8 +10,10 @@
         (change)="onOptionSelected(currentQuestion.id, $event.value)"
       >
         <mat-radio-button
-          *ngFor="let option of currentQuestion.options; let i = index"[value]="i">
-          {{ option.description }}
+          *ngFor="let option of currentQuestion.options; let i = index"
+          [value]="i"
+        >
+          {{ option.description }} <!-- Exibindo as opções de resposta -->
         </mat-radio-button>
       </mat-radio-group>
     </div>
@@ -26,13 +28,18 @@
     >
       Anterior
     </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="nextQuestion()"
-      [disabled]="currentQuestionIndex === questions.length"
-    >
-      {{ currentQuestionIndex === questions.length - 1 ? 'Finalizar' : 'Próxima' }}
-    </button>
+    @if(currentQuestionIndex === questions.length-1){
+      <button mat-raised-button color="primary"  (click)="submit()">
+        Finalizar
+      </button>
+
+    }@else{
+
+      <button mat-raised-button color="primary"  (click)="nextQuestion()" >
+        Proximo
+
+      </button>
+
+    }
   </div>
 </div>

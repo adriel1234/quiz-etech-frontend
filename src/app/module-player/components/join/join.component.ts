@@ -4,10 +4,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import {TestService} from '../../../services/test.service';
-import {QuizResult} from '../../../shared/models/quiz-result';
 import {FormsModule} from '@angular/forms';
-import {MatchUser} from '../../../shared/models/match-user.model';
-import {Match} from '../../../shared/models/match.model';
+import {MatchUserName} from '../../../shared/models/match-user.model';
+
+
 
 @Component({
   selector: 'app-join',
@@ -33,6 +33,7 @@ export class JoinComponent {
       return;
     }
 
+    // Busca o quiz pelo código
     this.testService.getQuizByCode(this.code).subscribe(
       (match) => {
         if (!match || !match.id) {
@@ -40,40 +41,32 @@ export class JoinComponent {
           return;
         }
 
-        // Get a valid userId (replace with your actual logic for fetching the user ID)
-        const userId = 1;  // Implement this function to get the logged-in user ID
-
-        const matchUser: {
-          wrongQuestions: number;
-          rightQuestions: number;
-          match: Match;
-          userId: number;  // Use a valid userId here
-          points: number;
-        } = {
-          userId: userId,
-          match: match,
+        // Cria o objeto MatchUser com o nome do usuário e o matchId
+        const matchUser: MatchUserName = {
+          userName: this.name, // Envia o nome do usuário
+          userId: undefined,
+          match: match, // Dados do quiz retornados pela API
           points: 0,
           rightQuestions: 0,
           wrongQuestions: 0,
         };
 
+        // Registra o usuário no quiz
         this.testService.registerMatchUser(matchUser).subscribe(
-          () => {
-            alert('Usuário cadastrado no quiz com sucesso!');
-            this.router.navigate(['/player/quiz/', match.id]); // Redirecionar para perguntas
-            console.log('Navigating to:', '/player/quiz/', match.id);
+          (response) => {
+            this.testService.quizResult = response; // Salva o resultado no serviço
+            this.router.navigate(['/player/info']);
           },
           (error) => {
-            console.error('Erro ao cadastrar o usuário no quiz:', error);
-            alert('Não foi possível cadastrar o usuário no quiz. Tente novamente.');
+            console.error('Erro ao registrar MatchUser:', error);
+            alert('Erro ao registrar o usuário no quiz.');
           }
         );
       },
       (error) => {
         console.error('Erro ao buscar o quiz pelo código:', error);
-        alert('Houve um erro ao buscar o quiz. Tente novamente mais tarde.');
+        alert('Erro ao buscar o quiz. Tente novamente.');
       }
     );
   }
-
 }
