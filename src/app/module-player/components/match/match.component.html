@@ -1,1 +1,34 @@
-<p>FUNCIONA PELO AMOR DE DEUS KKKKKJKJKJK VOU ME MATAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR</p>
+<div class="quiz-container">
+  <h1>{{ quizData.description }}</h1>
+
+  <div class="question-container">
+    <h3>{{ quizData.questions[currentQuestionIndex].description }}</h3>
+
+
+
+    <div class="options">
+      @for(option of currentQuestion?.options;track option){
+        <mat-radio-group [(ngModel)]="selectedOptions[quizData.questions[currentQuestionIndex].id]"
+                         (change)="onOptionSelected(quizData.questions[currentQuestionIndex].id, option.id)">
+          <mat-radio-button [id]="'question_' + quizData.questions[currentQuestionIndex].id + '_option_' + option.id"
+                            [value]="option.id">
+            {{ option.description }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+      }
+
+    </div>
+
+  </div>
+
+  <div class="navigation-buttons">
+    <!-- Usando MatButton do Angular Material -->
+    <button mat-raised-button color="primary" (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">
+      Anterior
+    </button>
+    <button mat-raised-button color="primary" (click)="nextQuestion()">
+      {{ currentQuestionIndex === quizData.questions.length - 1 ? 'Finalizar' : 'Próxima' }}
+    </button>
+  </div>
+</div>
