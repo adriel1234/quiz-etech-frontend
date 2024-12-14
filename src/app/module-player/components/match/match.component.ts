@@ -11,6 +11,7 @@ import {QuizResult} from '../../../shared/models/quiz-result';
 import {QuizService} from './quiz.service';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
+import {QuestionService} from '../../../shared/services/question.service';
 
 
 @Component({
@@ -30,18 +31,30 @@ import {NgForOf} from '@angular/common';
 })
 export class MatchComponent implements OnInit {
   quizData: any;
+  match: number=0;
+  public questions: Question[] = [];
   currentQuestionIndex = 0;
   currentQuestion: Question | undefined; // Define type as Question (assuming interface)
   selectedOptions: { [key: number]: number } = {};
 
-  constructor(private quizService: QuizService) {}
+  constructor(private quizService: QuizService,private questionService: QuestionService,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.quizService.getQuizData(5).subscribe(quiz => {
+    this.match = Number(this.route.snapshot.paramMap.get('id'));
+    this.quizService.getQuizData(4).subscribe(quiz => {
       this.quizData = quiz;
-      // Assign the current question based on the index
-      this.currentQuestion = this.quizData.questions[this.currentQuestionIndex];
-      console.log(this.currentQuestion);
+
+      const questionGroupIds = this.quizData.questions_group_question;
+
+      questionGroupIds.forEach((questionId: number) => {
+        this.questionService.getById(questionId).subscribe(question => {
+          // Process the fetched question
+          console.log(question);
+
+          // Add the question to a list of questions, if needed
+          this.questions.push(question);
+        });
+      });
     });
   }
 
