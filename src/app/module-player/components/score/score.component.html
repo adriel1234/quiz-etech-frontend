@@ -1,6 +1,27 @@
-<!--<p>score works!</p>-->
-<!--&lt;!&ndash;tela final que aparecera o resultado do joagdor PRESCIA ADAPTAR&ndash;&gt;-->
-<!--{{quizResult| json}}-->
-<!--<p>nome do homi</p>-->
-<!--<p>quanto acerto: 1 kkkkkkkkjkkjkj</p>-->
-<!--<p>quantas eram: 10 burro pa pourra man kkkkkklkjkjk</p>-->
+<div class="flex justify-center">
+  <div class="flex flex-col items-center w-96 mt-32 gap-2 shadow p-8 bg-white">
+    <h2>{{userName}}, Seu resultado!</h2>
+    <table>
+      <tr>
+        <td>Pontos</td>
+        <td>{{quizResult.points}}</td>
+      </tr>
+
+      <tr>
+        <td>Acertos</td>
+        <td>{{quizResult.rightQuestions}}</td>
+      </tr>
+
+      <tr>
+        <td>Erros</td>
+        <td>{{quizResult.wrongQuestions}}</td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+</div>

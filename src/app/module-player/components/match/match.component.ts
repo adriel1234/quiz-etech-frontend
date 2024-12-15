@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, OnDestroy} from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -12,6 +12,7 @@ import {QuestionService} from '../../../shared/services/question.service';
 import {MatchUser, MatchUserTest} from '../../../shared/models/match-user.model';
 import {Option} from '../../../shared/models/option.model';
 import {Question} from '../../../shared/models/question.model';
+import {interval,Subscription} from 'rxjs';
 
 
 @Component({
@@ -30,7 +31,7 @@ import {Question} from '../../../shared/models/question.model';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.scss'] // Corrigido: estilo é um array
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit,OnDestroy  {
   testService = inject(TestService);
   router = inject(Router);
   quizResult!: MatchUser;
@@ -41,6 +42,11 @@ export class MatchComponent implements OnInit {
   currentQuestionIndex = 0; // Começa pela primeira pergunta
   currentQuestionNo: number = 0;
   currentSelectionOptionId: number = 0;
+  public timer:number = 0;
+  public interval: any;
+  public remainingTime: number = 0;
+  private timerInterval: number = this.testService.matchDetails.time_per_question * 1000; // Convert to milliseconds
+  private timerSubscription: Subscription | undefined;
   selectedOptions: { [questionId: number]: string | null } = {}; // Respostas do usuário
 
   constructor(
@@ -53,7 +59,12 @@ export class MatchComponent implements OnInit {
     this.quizResult = this.testService.quizResult;
 
     // Acessando os detalhes do match
+    console.log('matchDetails')
     this.quizData = this.testService.matchDetails;
+    console.log(this.testService.matchDetails)
+    this.timer = this.testService.matchDetails.time_per_question
+
+    console.log("timer Oinit: ",this.timer)
 
     const questionGroupId = this.testService.matchDetails.question_group;
     console.log(this.quizData);  // Exibe todos os dados do match
@@ -65,6 +76,38 @@ export class MatchComponent implements OnInit {
       console.log("tamanho questions", questions.length);
       console.log('Questions fetched:', this.questions);
     });
+    this.startTimer();
+  }
+  ngOnDestroy() {
+    this.stopTimer();
+  }
+
+  startTimer() {
+    this.timer = this.testService.matchDetails.time_per_question;
+    this.timerSubscription = interval(1000).subscribe(() => {
+      // Update timer display or perform other actions
+      this.timer -= 1;
+
+      if (this.timer <= 0) {
+        this.stopTimer();
+        // Handle time-out logic, e.g., automatically submit the answer or move to the next question
+
+        if(this.currentQuestionNo==this.questions.length - 1){
+          console.log("passou aqui")
+          this.submit();
+        }else{
+          console.log("starttimer No: ",this.currentQuestionNo)
+          this.next();
+        }
+
+      }
+    });
+  }
+
+  stopTimer() {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
   }
 
   get currentQuestion() {
@@ -93,6 +136,8 @@ export class MatchComponent implements OnInit {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       // Avança para a próxima pergunta
       this.currentQuestionIndex++;
+      this.stopTimer();
+      this.startTimer();
 
     } else {
       console.log('Fim do quiz. Respostas:', this.selectedOptions);
