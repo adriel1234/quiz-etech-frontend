@@ -37,6 +37,7 @@ export class MatchComponent implements OnInit,OnDestroy  {
   quizResult!: MatchUser;
   quiz!: MatchUserTest;
   quizData: any;
+  consoleNext:number=1;
   match: number = 0;
   questions: Question[] = [];
   currentQuestionIndex = 0; // Começa pela primeira pergunta
@@ -84,26 +85,38 @@ export class MatchComponent implements OnInit,OnDestroy  {
   }
 
   startTimer() {
+    // Garantir que o timer só será iniciado se não estiver ativo
+    if (this.timerSubscription) {
+      this.stopTimer();
+    }
+
+    // Definindo o tempo da pergunta
     this.timer = this.testService.matchDetails.time_per_question;
+
     this.timerSubscription = interval(1000).subscribe(() => {
-      // Update timer display or perform other actions
+      // Decrementa o tempo a cada segundo
       this.timer -= 1;
 
+      // Verifica se o tempo chegou a 0 ou passou de 0
       if (this.timer <= 0) {
-        this.stopTimer();
-        // Handle time-out logic, e.g., automatically submit the answer or move to the next question
-
-        if(this.currentQuestionNo==this.questions.length - 1){
-          console.log("passou aqui")
-          this.submit();
-        }else{
-          console.log("starttimer No: ",this.currentQuestionNo)
-          this.next();
-        }
-
+        this.stopTimer(); // Para o timer
+        this.handleTimeOut(); // Avança para a próxima pergunta
       }
     });
   }
+
+  handleTimeOut() {
+
+    // Lógica para quando o timer atingir 0
+    if (this.currentQuestionNo === this.questions.length - 1) {
+      console.log("Fim do quiz");
+      this.submit(); // Finaliza o quiz se for a última pergunta
+    } else {
+      console.log("Avançando para a próxima pergunta");
+      this.next(); // Avança para a próxima pergunta
+    }
+  }
+
 
   getCorrectOptionDescription(): string {
     if (this.currentQuestion?.options) {
@@ -136,6 +149,9 @@ export class MatchComponent implements OnInit,OnDestroy  {
 
 
   next(): void {
+    this.stopTimer();
+    console.log("next!!!!!!!!!!!!!!", this.consoleNext)
+    this.consoleNext++;
     this.updateSelectedOption(this.currentQuestionNo, this.currentSelectionOptionId)
     console.log("lentgh", this.questions.length);
     console.log("currentQuestion", this.currentQuestionNo);
@@ -143,21 +159,22 @@ export class MatchComponent implements OnInit,OnDestroy  {
     console.log("currentSelectionOptionId", this.currentSelectionOptionId);
 
     if (this.currentQuestionIndex < this.questions.length - 1) {
-      // Avança para a próxima pergunta
-      this.currentQuestionIndex++;
+
+
       this.correctAnswer = this.getCorrectOptionDescription();
       setTimeout(() => {
-        this.correctAnswer = ''; // Clear the correct answer after the interval
+        this.correctAnswer = ''; // Clear the correct answer
+        // Avança para a próxima pergunta após o intervalo
+        this.currentQuestionIndex++;
+        this.currentQuestionNo++; // Avança o número da questão
+        this.startTimer(); // Reinicia o timer para a próxima pergunta
       }, 2000);
-      this.stopTimer();
-      this.startTimer();
 
     } else {
       console.log('Fim do quiz. Respostas:', this.selectedOptions);
       // Aqui você pode salvar as respostas finais ou exibir um resumo
     }
 
-    this.currentQuestionNo++
   }
 
   onDescriptionChange(option: any) {
@@ -194,9 +211,9 @@ export class MatchComponent implements OnInit,OnDestroy  {
       const correctOption = question.options.find((option: any) => option.correct === true); // Opção correta
       id++;
       // Logs para depuração
-      console.log("Questão:", question.description);
-      console.log("Selecionada (descrição):", selectedOptionDescription);
-      console.log("Correta (descrição):", correctOption?.description);
+      // console.log("Questão:", question.description);
+      // console.log("Selecionada (descrição):", selectedOptionDescription);
+      // console.log("Correta (descrição):", correctOption?.description);
 
       // Verificação se a descrição da resposta selecionada é igual à da resposta correta
       if (correctOption && selectedOptionDescription === correctOption.description) {
@@ -213,9 +230,9 @@ export class MatchComponent implements OnInit,OnDestroy  {
     this.quizResult.wrongQuestions = wrongQuestions;
 
     // Logs finais do resultado
-    console.log("Resultado calculado:");
-    console.log("Pontos:", points);
-    console.log("Questões corretas:", rightQuestions);
-    console.log("Questões incorretas:", wrongQuestions);
+    // console.log("Resultado calculado:");
+    // console.log("Pontos:", points);
+    // console.log("Questões corretas:", rightQuestions);
+    // console.log("Questões incorretas:", wrongQuestions);
   }
 }
