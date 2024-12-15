@@ -20,3 +20,15 @@ export interface MatchUserName {
   createdAt?: string; // Tornar opcional
   modifiedAt?: string; // Tornar opcional
 }
+
+export interface MatchUserTest {
+  userName: string;
+  userId?: number;
+  match: Match;
+  points: number;
+  rightQuestions: number;
+  wrongQuestions: number;
+  id?: number; // Tornar opcional
+  createdAt?: string; // Tornar opcional
+  modifiedAt?: string; // Tornar opcional
+}

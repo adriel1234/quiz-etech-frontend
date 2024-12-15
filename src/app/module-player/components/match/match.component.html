@@ -1,45 +1,30 @@
-<div class="quiz-container" *ngIf="quizData && questions.length > 0">
-  <h1>{{ quizData?.description }}</h1> <!-- Exibindo a descrição do match -->
+<div class="quiz-container">
+  @if(currentQuestion){
+    <div>
+      <h4>{{quizData?.description}}</h4>
+      <div class="w-full p-4 shadow-1 mb-2">
+        <p>{{currentQuestion.description}}56555555555</p>
 
-  <div class="question-container">
-    <h3>{{ currentQuestion?.description }}</h3> <!-- Exibindo a descrição da pergunta -->
+      </div>
 
-    <div class="options" *ngIf="currentQuestion?.options">
-      <mat-radio-group
-        [(ngModel)]="selectedOptions[currentQuestion.id]"
-        (change)="onOptionSelected(currentQuestion.id, $event.value)"
-      >
-        <mat-radio-button
-          *ngFor="let option of currentQuestion.options; let i = index"
-          [value]="i"
-        >
-          {{ option.description }} <!-- Exibindo as opções de resposta -->
-        </mat-radio-button>
-      </mat-radio-group>
+      @for(option of currentQuestion.options; track option){
+        <div class="w-full flex items-center p-4 shadow-1 cursor-pointer" (click)="currentSelectedOptionId=option.description">
+          <mat-radio-button color="primary" [value]="option.id" [checked]="currentSelectionOptionId==option.id" ></mat-radio-button>
+          <p>{{option.description}}</p>
+        </div>
+
+      }
+      <div class="w-full flex justify-content-end">
+        @if(currentQuestionNo==questions.length - 1){
+          <button mat-raised-button color="primary" (click)="submit()">Enviar</button>
+
+        }@else{
+          <button mat-raised-button color="primary" (click)="next()">salvar e proximo</button>
+        }
+
+
+      </div>
+
     </div>
-  </div>
-
-  <div class="navigation-buttons">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="previousQuestion()"
-      [disabled]="currentQuestionIndex === 0"
-    >
-      Anterior
-    </button>
-    @if(currentQuestionIndex === questions.length-1){
-      <button mat-raised-button color="primary"  (click)="submit()">
-        Finalizar
-      </button>
-
-    }@else{
-
-      <button mat-raised-button color="primary"  (click)="nextQuestion()" >
-        Proximo
-
-      </button>
-
-    }
-  </div>
+  }
 </div>

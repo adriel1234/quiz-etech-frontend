@@ -47,7 +47,7 @@ export class TestService {
   getQuizResult(id: number) {
     return this.http.get<QuizResult>(`http://localhost:8000/api/quizResults/${id}`);
   }
-  // Método para buscar Match por ID
+
   getMatchByCode(matchId: Match): Observable<Match> {
     const url = `${URLS.BASE}match/${matchId}/`; // Monta a URL com o ID do Match
     return this.http.get<Match>(url); // Faz a requisição GET e retorna os dados
@@ -56,4 +56,9 @@ export class TestService {
     const url = `${URLS.BASE}userid/${userId}/`;
     return this.http.get<User>(url);
   }
+
+  updateQuiz(){
+
+  }
+
 }
