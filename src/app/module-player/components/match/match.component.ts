@@ -47,6 +47,7 @@ export class MatchComponent implements OnInit,OnDestroy  {
   public remainingTime: number = 0;
   private timerInterval: number = this.testService.matchDetails.time_per_question * 1000; // Convert to milliseconds
   private timerSubscription: Subscription | undefined;
+  correctAnswer: string = '';
   selectedOptions: { [questionId: number]: string | null } = {}; // Respostas do usuário
 
   constructor(
@@ -104,6 +105,14 @@ export class MatchComponent implements OnInit,OnDestroy  {
     });
   }
 
+  getCorrectOptionDescription(): string {
+    if (this.currentQuestion?.options) {
+      const correctOption = this.currentQuestion.options.find(option => option.correct);
+      return correctOption ? correctOption.description : 'Nenhuma opção correta';
+    }
+    return 'Nenhuma opção correta';
+  }
+
   stopTimer() {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
@@ -136,6 +145,10 @@ export class MatchComponent implements OnInit,OnDestroy  {
     if (this.currentQuestionIndex < this.questions.length - 1) {
       // Avança para a próxima pergunta
       this.currentQuestionIndex++;
+      this.correctAnswer = this.getCorrectOptionDescription();
+      setTimeout(() => {
+        this.correctAnswer = ''; // Clear the correct answer after the interval
+      }, 2000);
       this.stopTimer();
       this.startTimer();
 
