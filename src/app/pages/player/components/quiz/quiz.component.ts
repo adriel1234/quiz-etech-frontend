@@ -60,12 +60,9 @@ export class QuizComponent implements OnInit,OnDestroy  {
     this.quizResult = this.testService.quizResult;
 
     // Acessando os detalhes do match
-    console.log('matchDetails')
+    console.log('matchDetails');
     this.quizData = this.testService.matchDetails;
-    console.log(this.testService.matchDetails)
-    this.timer = this.testService.matchDetails.time_per_question
-
-    console.log("timer Oinit: ",this.timer)
+    this.timer = this.testService.matchDetails.time_per_question;
 
     const questionGroupId = this.testService.matchDetails.question_group;
     console.log(this.quizData);  // Exibe todos os dados do match
@@ -73,11 +70,22 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
     // Busca todas as questões pelo grupo
     this.quizService.getQuestionsByGroup(questionGroupId).subscribe((questions) => {
-      this.questions = questions;
+      this.questions = questions.map((question) => {
+        this.shuffleOptions(question.options); // Embaralha as opções
+        return question;
+      });
       console.log("tamanho questions", questions.length);
       console.log('Questions fetched:', this.questions);
     });
     this.startTimer();
+  }
+
+  shuffleOptions(options: any[]): void {
+    // Função para embaralhar as opções
+    for (let i = options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [options[i], options[j]] = [options[j], options[i]]; // Troca as opções
+    }
   }
   ngOnDestroy() {
     this.stopTimer();
