@@ -6,12 +6,11 @@ import { Router} from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
-
 import {interval,Subscription} from 'rxjs';
 import {TestService} from '../../../../shared/services/test.service';
 import {MatchUser, MatchUserTest} from '../../../../shared/models/match-user.model';
 import {Question} from '../../../../shared/models/question.model';
-import {QuizService} from '../match/quiz.service';
+import {QuizService} from './quiz.service';
 
 
 
