@@ -192,6 +192,15 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
   submit() {
     this.calculateResult()
+    this.quizService.updateQuizResult(this.quizResult.id, this.quizResult).subscribe({
+      next: (response) => {
+        console.log('Quiz atualizado com sucesso:', response);
+        this.router.navigateByUrl('player/score'); // Redireciona após o sucesso
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar o quiz:', error);
+      },
+    });
     this.router.navigateByUrl("player/score")
 
   }

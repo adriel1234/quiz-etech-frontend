@@ -20,7 +20,7 @@ export class TestService {
     return this.http.get<Question[]>("http://localhost:8000/api/questions");
   }
   getQuizByCode(code: string) {
-    return this.http.get<Match>("http://localhost:8000/api/quiz/" + code);
+    return this.http.get<Match>("http://localhost:8000/api/match/" + code);
   }
 
   getQuizWithMatchUser(quizId: number, matchUserId?: string) {
