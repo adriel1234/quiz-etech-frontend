@@ -43,8 +43,9 @@ export class QuizComponent implements OnInit,OnDestroy  {
   currentQuestionNo: number = 0;
   currentSelectionOptionId: number = 0;
   public timer:number = 0;
+  iningTimes: number[] = [];
   public interval: any;
-  public remainingTime: number = 0;
+  public remainingTimes: number[] = [];
   private timerInterval: number = this.testService.matchDetails.time_per_question * 1000; // Convert to milliseconds
   private timerSubscription: Subscription | undefined;
   correctAnswer: string = '';
@@ -74,6 +75,8 @@ export class QuizComponent implements OnInit,OnDestroy  {
         this.shuffleOptions(question.options); // Embaralha as opções
         return question;
       });
+      this.remainingTimes = Array(this.questions.length).fill(this.testService.matchDetails.time_per_question);
+
       console.log("tamanho questions", questions.length);
       console.log('Questions fetched:', this.questions);
     });
@@ -92,6 +95,7 @@ export class QuizComponent implements OnInit,OnDestroy  {
   }
 
   startTimer() {
+    console.log("start")
     // Garantir que o timer só será iniciado se não estiver ativo
     if (this.timerSubscription) {
       this.stopTimer();
@@ -103,6 +107,10 @@ export class QuizComponent implements OnInit,OnDestroy  {
     this.timerSubscription = interval(1000).subscribe(() => {
       // Decrementa o tempo a cada segundo
       this.timer -= 1;
+
+      // Atualiza o tempo restante no array
+      console.log(this.currentQuestionIndex)
+      this.remainingTimes[this.currentQuestionIndex] = this.timer;
 
       // Verifica se o tempo chegou a 0 ou passou de 0
       if (this.timer <= 0) {
@@ -200,6 +208,7 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
   submit() {
     console.log("submit")
+    console.log("Tempos restantes para cada pergunta:", this.remainingTimes);
     this.updateSelectedOption(this.currentQuestionNo, this.currentSelectionOptionId)
     this.calculateResult()
 
@@ -235,7 +244,7 @@ export class QuizComponent implements OnInit,OnDestroy  {
       const selectedOptionDescription = this.selectedOptions[id]; // Resposta do usuário
       // Encontramos a opção correta da questão
       const correctOption = question.options.find((option: any) => option.correct === true); // Opção correta
-      id++;
+
       // Logs para depuração
       // console.log("Questão:", question.description);
       // console.log("Selecionada (descrição):", selectedOptionDescription);
@@ -244,10 +253,22 @@ export class QuizComponent implements OnInit,OnDestroy  {
       // Verificação se a descrição da resposta selecionada é igual à da resposta correta
       if (correctOption && selectedOptionDescription === correctOption.description) {
         rightQuestions++;
-        points += question.points || 1;
+
+        // Converter os valores para números
+        const remainingTime = Number(this.remainingTimes[id]) || 1; // Garantir um valor padrão de 1
+        const questionPoints = Number(question.points) || 1; // Garantir um valor padrão de 1
+
+        // Calcular os pontos
+        question.points = questionPoints * remainingTime;
+
+        console.log('Tempo restante:', remainingTime);
+        console.log('Pontos calculados:', question.points);
+
+        points += question.points; // Adicionar os pontos calculados
       } else {
         wrongQuestions++;
       }
+      id++;
     });
 
     // Atualiza o resultado no objeto `quizResult`
