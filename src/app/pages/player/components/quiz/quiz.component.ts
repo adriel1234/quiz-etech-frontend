@@ -149,13 +149,13 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
   next(): void {
     this.stopTimer();
-    console.log("next!!!!!!!!!!!!!!", this.consoleNext)
+    // console.log("next!!!!!!!!!!!!!!", this.consoleNext)
     this.consoleNext++;
     this.updateSelectedOption(this.currentQuestionNo, this.currentSelectionOptionId)
-    console.log("lentgh", this.questions.length);
-    console.log("currentQuestion", this.currentQuestionNo);
-    console.log(this.currentQuestion)
-    console.log("currentSelectionOptionId", this.currentSelectionOptionId);
+    // console.log("lentgh", this.questions.length);
+    // console.log("currentQuestion", this.currentQuestionNo);
+    // console.log(this.currentQuestion)
+    // console.log("currentSelectionOptionId", this.currentSelectionOptionId);
 
     if (this.currentQuestionIndex < this.questions.length - 1) {
 
@@ -171,7 +171,7 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
     } else {
       console.log('Fim do quiz. Respostas:', this.selectedOptions);
-      // Aqui você pode salvar as respostas finais ou exibir um resumo
+
     }
 
   }
@@ -191,14 +191,17 @@ export class QuizComponent implements OnInit,OnDestroy  {
   }
 
   submit() {
-    this.calculateResult()
     console.log("submit")
+    this.updateSelectedOption(this.currentQuestionNo, this.currentSelectionOptionId)
+    this.calculateResult()
+
     console.log(this.quizResult)
     const updatedData = {
       points: this.quizResult.points,
-      right_questions: this.quizResult.rightQuestions, // Converte para snake_case
-      wrong_questions: this.quizResult.wrongQuestions, // Converte para snake_case
+      right_questions: this.quizResult.rightQuestions,  // Use snake_case aqui
+      wrong_questions: this.quizResult.wrongQuestions,  // Use snake_case aqui
     };
+
     this.quizService.updateQuizResult(this.quizResult.id, updatedData).subscribe({
       next: (response) => {
         console.log('Quiz atualizado com sucesso:', response);
