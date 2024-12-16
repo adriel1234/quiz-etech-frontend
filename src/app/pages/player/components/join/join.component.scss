@@ -1,0 +1,47 @@
+/* Container principal */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f6f9; /* Cor de fundo da tela */
+}
+
+/* Cartão centralizado */
+.card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+}
+
+/* Título */
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333333; /* Cor do título */
+}
+
+/* Caixa de input */
+.input-box {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Botão estilizado */
+.join-button {
+  color: #ffffff; /* Cor do texto */
+  background-color: #1976d2; /* Azul primário */
+  font-weight: bold;
+  transition: all 0.3s ease; /* Transição suave */
+}
+
+/* Efeito hover no botão */
+.join-button:hover {
+  background-color: #135ba1; /* Cor mais escura ao passar o mouse */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  color: #e3f2fd; /* Tom mais claro no texto para contraste */
+}
