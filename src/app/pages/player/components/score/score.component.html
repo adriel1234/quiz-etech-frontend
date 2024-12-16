@@ -1,27 +1,28 @@
 <div class="flex justify-center">
-  <div class="flex flex-col items-center w-96 mt-32 gap-2 shadow p-8 bg-white">
-    <h2>{{userName}}, Seu resultado!</h2>
-    <table>
-      <tr>
-        <td>Pontos</td>
-        <td>{{quizResult.points}}</td>
+  <div class="flex flex-col items-center w-96 mt-32 gap-4 shadow-lg p-8 bg-white rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">{{userName}}, Seu resultado!</h2>
+
+    <table class="w-full">
+      <tr class="border-b">
+        <td class="py-2 px-4 font-medium">Pontos</td>
+        <td class="py-2 px-4">{{quizResult.points}}</td>
       </tr>
 
-      <tr>
-        <td>Acertos</td>
-        <td>{{quizResult.rightQuestions}}</td>
+      <tr class="border-b">
+        <td class="py-2 px-4 font-medium">Acertos</td>
+        <td class="py-2 px-4">{{quizResult.rightQuestions}}</td>
       </tr>
 
-      <tr>
-        <td>Erros</td>
-        <td>{{quizResult.wrongQuestions}}</td>
+      <tr class="border-b">
+        <td class="py-2 px-4 font-medium">Erros</td>
+        <td class="py-2 px-4">{{quizResult.wrongQuestions}}</td>
       </tr>
 
+      <!-- Linha extra, caso necessário -->
       <tr>
         <td></td>
         <td></td>
       </tr>
     </table>
   </div>
-
 </div>

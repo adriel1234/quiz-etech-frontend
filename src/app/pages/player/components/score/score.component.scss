@@ -1,0 +1,43 @@
+/* Container */
+.result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8rem; /* Altura do topo */
+}
+
+.result-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 24rem;
+  padding: 2rem;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+/* Título */
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Tabela */
+table {
+  width: 100%;
+}
+
+table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e2e8f0; /* Linha de separação */
+}
+
+table td:first-child {
+  font-weight: 600;
+}
+
+table tr:last-child td {
+  border-bottom: none; /* Remove a linha da última célula */
+}
