@@ -1,0 +1,56 @@
+.custom-button{
+  color:white !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.menu {
+  padding: 0 1rem;
+
+  h2 {
+    font-size: 2rem; /* Tamanho padrão */
+    font-weight: bold;
+    margin-right: 1.5rem;
+    white-space: nowrap; /* Evita quebra de linha */
+  }
+
+  button {
+    font-size: 1rem;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .menu {
+    h2 {
+      font-size: 1.5rem; /* Reduz tamanho do título em tablets */
+      margin-right: 1rem;
+    }
+
+    button {
+      font-size: 0.9rem; /* Reduz tamanho dos botões */
+    }
+  }
+}

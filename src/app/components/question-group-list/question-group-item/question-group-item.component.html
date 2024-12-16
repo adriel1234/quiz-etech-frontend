@@ -1,4 +1,4 @@
-<div class="flex flex-column gap-1">
+<div class="flex flex-column gap-1" *ngIf="isFormVisible">
   <h1>Cadastro de Grupo de Perguntas</h1>
 
   <form [formGroup]="formGroup">
@@ -13,18 +13,27 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Campo de Perguntas -->
-      <mat-form-field appearance="fill">
-        <mat-label>Questões</mat-label>
-        <mat-select formControlName="questions_group_question" multiple>
-          <mat-option *ngFor="let question of questions" [value]="question.id">
+      <!-- Campo de Perguntas com MatCheckbox -->
+      <div formArrayName="questions_group_question">
+        <mat-paginator
+          [length]="questions.length"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          (page)="pageEvent($event)">
+        </mat-paginator>
+
+        <div *ngFor="let question of paginatedQuestions; let i = index">
+          <mat-checkbox
+            [formControlName]="i"
+            (change)="updateSelectedQuestionIds()">
             {{ question.description }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="formGroup.get('questions_group_question')">
+          </mat-checkbox>
+        </div>
+
+        <mat-error *ngIf="formGroup.get('questions_group_question')?.hasError('required')">
           Selecione ao menos uma questão.
         </mat-error>
-      </mat-form-field>
+      </div>
     </div>
 
     <!-- Botão de Envio -->
@@ -33,3 +42,4 @@
     </button>
   </form>
 </div>
+

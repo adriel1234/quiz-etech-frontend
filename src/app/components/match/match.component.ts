@@ -1,35 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {QuestionService} from '../../shared/services/question.service';
-import {QuestionAnswerFormComponent} from './question-answer-form/question-answer-form.component';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
+import {Component, OnInit} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 import {NavigationExtras, Router} from '@angular/router';
-import {QuestionGroup} from '../../shared/models/question-group.model';
+import {MatTableModule} from '@angular/material/table';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCard} from '@angular/material/card';
 import {BaseService} from '../../shared/services/base.service';
 import {HttpClient} from '@angular/common/http';
-import {URLS} from '../../shared/urls';
-import {Question} from '../../shared/models/question.model';
-import {FormsModule} from '@angular/forms';
-import {MatCard} from '@angular/material/card';
 import {ToastrService} from 'ngx-toastr';
+import {URLS} from '../../shared/urls';
+
+interface MatchPayload {
+  id: number;
+  time_per_question: number;
+  description: string;
+  question_group: number; // Apenas o ID do grupo
+}
 
 @Component({
-  selector: 'app-question-list',
+  selector: 'app-match',
   standalone: true,
   imports: [MatTableModule, MatButtonModule, MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule, MatCard],
-  templateUrl: './question-list.component.html',
-  styleUrls: ['./question-list.component.scss'],
+  templateUrl: './match.component.html',
+  styleUrl: './match.component.scss'
 })
-export class QuestionListComponent implements OnInit {
+
+export class MatchComponent implements OnInit {
   displayedColumns: string[] = ['id', 'description', 'actions'];
-  public dataSource: Question[] = [];
+  public dataSource: MatchPayload[] = [];
   public searchDescription: string = '';
 
-  private service: BaseService<Question>;
+  private service: BaseService<MatchPayload>;
 
   // Injetando o BaseService diretamente no construtor
   constructor(
@@ -39,7 +43,7 @@ export class QuestionListComponent implements OnInit {
     private router: Router
   ) {
     // Inicializa o BaseService com a URL correta para questões
-    this.service = new BaseService<Question>(http, URLS.QUESTION);
+    this.service = new BaseService<MatchPayload>(http, URLS.MATCH);
   }
 
   ngOnInit(): void {
@@ -52,7 +56,7 @@ export class QuestionListComponent implements OnInit {
 
     // Usando o BaseService para obter todos os itens
     this.service.getAll().subscribe({
-      next: (data: Question[]) => {
+      next: (data: MatchPayload[]) => {
         this.dataSource = data.sort((a, b) => a.id - b.id);
       },
       error: () => {
@@ -73,19 +77,6 @@ export class QuestionListComponent implements OnInit {
       },
     });
   }
-
-  public updateObject(question: Question): void {
-    this.service.update(question.id, question).subscribe({
-      next: () => {
-        this.toastr.success('Atualização bem-sucedida.');
-        this.search(); // Atualiza a lista após a atualização
-      },
-      error: (err) => {
-        this.toastr.error('Erro ao atualizar a pergunta.', err);
-      },
-    });
-  }
-
 
 
   public goToPage(route: string): void {

@@ -17,7 +17,7 @@ export class LoginService {
       tap((value) => {
         sessionStorage.setItem("auth-token", value.access);
         sessionStorage.setItem("refresh-token", value.refresh);
-        this.router.navigate(['/user']);
+        this.router.navigate(['/admin']);
       }),
       catchError((error) => {
         console.error("Login error:", error.error); // Mostra detalhes do erro
@@ -28,11 +28,6 @@ export class LoginService {
 
 
   signup(name:string, email: string, password: string){
-    return this.httpClient.post<LoginResponse>(this.apiUrl+"register/", { name,email, password }).pipe(
-      tap((value:LoginResponse) => {
-        sessionStorage.setItem("auth-token", value.token)
-        sessionStorage.setItem("username", value.name)
-      })
-    )
+    return this.httpClient.post<LoginResponse>(this.apiUrl+"register/", { name,email, password })
   }
 }

@@ -7,6 +7,10 @@ mat-checkbox {
   align-items: center;  // Garante o alinhamento vertical correto
 }
 
+.h1-form-title{
+  margin-top: -60px;
+}
+
 
 .alternativa-label {
   font-weight: bold;
@@ -19,7 +23,14 @@ mat-checkbox {
 }
 
 .flex-column {
-  flex-direction: column; /* Organiza os itens na vertical */
+  flex-direction: column;
+  width: 100%;
+  max-width: 1350px; /* Limita a largura máxima do formulário */
+  background-color: #fff; /* Fundo branco para destacar o conteúdo */
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar o conteúdo */
+  padding: 20px;
+  transition: all 0.3s ease;
 }
 
 /* Estilo para as alternativas */
@@ -32,5 +43,6 @@ mat-checkbox {
   display: flex;
   justify-content: end;
   width: 100%;
-  margin: 20px 0;
+  margin-top: -10px;
+  margin-bottom: 10px;
 }

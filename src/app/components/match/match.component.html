@@ -1,5 +1,5 @@
 <div class="flex flex-column gap-1">
-  <h1>GRUPO DE PERGUNTAS</h1>
+  <h1>MATCH</h1>
 
   <div class="flex gap-3">
 
@@ -11,7 +11,7 @@
     <button mat-fab (click)="search()" class="btn-default">
       <mat-icon class="custom-icon">search</mat-icon>
     </button>
-    <button mat-fab (click)="goToPage('admin/question-groups/create')" class="btn-default">
+    <button mat-fab (click)="goToPage('admin/match/create')" class="btn-default">
       <mat-icon class="custom-icon">add</mat-icon>
     </button>
   </div>
@@ -29,16 +29,18 @@
         <td mat-cell *matCellDef="let element"> {{ element.description }}</td>
       </ng-container>
 
-
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="w-10rem"></th>
         <td mat-cell *matCellDef="let element" class="w-10rem">
 
-          <button mat-icon-button aria-label="edit" (click)="goToPage('admin/question-groups/edit/'+element.id)">
-            <mat-icon color>edit</mat-icon>
+          <button mat-icon-button aria-label="edit" (click)="goToPage('admin/match/edit/'+element.id)">
+            <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button aria-label="delete" (click)="deleteObject(element.id)">
             <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="show" (click)="goToPage('admin/ranking/'+element.id)">
+            <mat-icon>add</mat-icon>
           </button>
         </td>
       </ng-container>
@@ -51,11 +53,10 @@
 
     @if (dataSource.length === 0) {
       <div class="flex flex-center align-items-center justify-content-center">
-        <h3>Nenhum Grupo de questão encontrado</h3>
+        <h3>Nenhuma Questão encontrada</h3>
       </div>
     }
 
   </mat-card>
 
 </div>
-
