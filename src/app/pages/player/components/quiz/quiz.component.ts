@@ -192,7 +192,14 @@ export class QuizComponent implements OnInit,OnDestroy  {
 
   submit() {
     this.calculateResult()
-    this.quizService.updateQuizResult(this.quizResult.id, this.quizResult).subscribe({
+    console.log("submit")
+    console.log(this.quizResult)
+    const updatedData = {
+      points: this.quizResult.points,
+      right_questions: this.quizResult.rightQuestions, // Converte para snake_case
+      wrong_questions: this.quizResult.wrongQuestions, // Converte para snake_case
+    };
+    this.quizService.updateQuizResult(this.quizResult.id, updatedData).subscribe({
       next: (response) => {
         console.log('Quiz atualizado com sucesso:', response);
         this.router.navigateByUrl('player/score'); // Redireciona após o sucesso
