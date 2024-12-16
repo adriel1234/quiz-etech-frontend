@@ -1,0 +1,34 @@
+<div class="quiz-container">
+  @if(currentQuestion){
+    <div>
+      <h4>{{quizData?.description}}</h4>
+      <div class="w-full p-4 shadow-1 mb-2">
+        <p>{{currentQuestion.description}}</p>
+        <div class="question-timer">
+          <div class="timer">Tempo restante: {{ timer }}s</div>
+        </div>
+        <p *ngIf="correctAnswer!=''"><strong>Resposta correta:</strong> {{ correctAnswer }}</p>
+
+      </div>
+
+      @for(option of currentQuestion.options; track option){
+        <div class="w-full flex items-center p-4 shadow-1 cursor-pointer" (click)="currentSelectedOptionId=option.description">
+          <mat-radio-button color="primary" [value]="option.id" [checked]="currentSelectionOptionId==option.id" ></mat-radio-button>
+          <p>{{option.description}}</p>
+        </div>
+
+      }
+      <div class="w-full flex justify-content-end">
+        @if(currentQuestionNo==questions.length - 1){
+          <button mat-raised-button color="primary" (click)="submit()">Enviar</button>
+
+        }@else{
+          <button mat-raised-button color="primary" (click)="next()">salvar e proximo</button>
+        }
+
+
+      </div>
+
+    </div>
+  }
+</div>
