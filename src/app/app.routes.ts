@@ -14,6 +14,10 @@ import {GroupQuestionListComponent} from './components/question-group-list/group
 import {AdminComponent} from './pages/admin/admin.component';
 import {MatchComponent} from './components/match/match.component';
 import {MatchItemComponent} from './components/match/match-item/match-item.component';
+import {JoinComponent} from './pages/player/components/join/join.component';
+import {InfoComponent} from './pages/player/components/info/info.component';
+import {ScoreComponent} from './pages/player/components/score/score.component';
+import {QuizComponent} from './pages/player/components/quiz/quiz.component';
 
 export const routes: Routes = [
   {
@@ -89,5 +93,35 @@ export const routes: Routes = [
       },
 
     ]
-  }
+  },
+  {
+    path: 'player',
+    children: [
+      {
+        path: '',
+        redirectTo: 'join',
+        pathMatch: 'full',
+      },
+      {
+        path: 'join',
+        component: JoinComponent,
+        data: { title: 'Autenticação' },
+      },
+      {
+        path: 'info',
+        component: InfoComponent,
+        data: { title: 'Sala de Espera' },
+      },
+      {
+        path: 'quiz',
+        component: QuizComponent,
+        data: { title: 'Respostas' },
+      },
+      {
+        path: 'score',
+        component: ScoreComponent,
+        data: { title: 'Total de respostas certas' },
+      },
+    ],
+  },
 ];

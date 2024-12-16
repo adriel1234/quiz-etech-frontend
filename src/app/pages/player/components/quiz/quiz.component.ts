@@ -11,7 +11,8 @@ import {interval,Subscription} from 'rxjs';
 import {TestService} from '../../../../shared/services/test.service';
 import {MatchUser, MatchUserTest} from '../../../../shared/models/match-user.model';
 import {Question} from '../../../../shared/models/question.model';
-import {QuizService} from './quiz.service';
+import {QuizService} from '../match/quiz.service';
+
 
 
 @Component({
@@ -27,10 +28,10 @@ import {QuizService} from './quiz.service';
     NgForOf,
     NgIf,
   ],
-  templateUrl: './match.component.html',
-  styleUrls: ['./match.component.scss'] // Corrigido: estilo é um array
+  templateUrl: './quiz.component.html',
+  styleUrl: './quiz.component.scss'
 })
-export class MatchComponent implements OnInit,OnDestroy  {
+export class QuizComponent implements OnInit,OnDestroy  {
   testService = inject(TestService);
   router = inject(Router);
   quizResult!: MatchUser;
