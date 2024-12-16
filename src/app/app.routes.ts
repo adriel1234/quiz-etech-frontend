@@ -1,7 +1,6 @@
 import {Routes} from '@angular/router';
 import {LoginComponent} from './pages/login/login.component';
 import {SignUpComponent} from './pages/signup/signup.component';
-// import {UserComponent} from './pages/user/user.component';
 import {AuthGuard} from './shared/services/auth-guard.service';
 import {
   QuestionAnswerFormComponent
@@ -18,6 +17,7 @@ import {JoinComponent} from './pages/player/components/join/join.component';
 import {InfoComponent} from './pages/player/components/info/info.component';
 import {ScoreComponent} from './pages/player/components/score/score.component';
 import {QuizComponent} from './pages/player/components/quiz/quiz.component';
+import {RankingComponent} from './components/ranking/ranking.component';
 
 export const routes: Routes = [
   {
@@ -91,6 +91,11 @@ export const routes: Routes = [
         component: MatchItemComponent,
         data: { title: 'Editar Match' },
       },
+      {
+        path: 'ranking/:id',
+        component: RankingComponent,
+        data: { title: 'Ranking' },
+      }
 
     ]
   },
